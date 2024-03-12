@@ -13,6 +13,13 @@ Watchdog для платы защищенного компьютера. Выпо
 
 ![pinout](./doc/pinout.png)
 
+| ST-LINK | SM_TM    |
+| :---:   | :---: |
+| 3.3V   | 1 STM_3V3  |
+| SWIM   | 2 SWIM  |
+| RST    | 3 STM_RESET  |
+| GND    | 4 GND  |
+
 **Программатор**
 
 ![programmer](./doc/programmer.jpg)
