@@ -1,0 +1,55 @@
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 1.
+Hexadecimal [24-Bits]
+
+Symbol Table
+
+    .__.$$$.                                                    =  002710 L
+    .__.ABS.                                                    =  000000 G
+    .__.CPU.                                                    =  000000 L
+    .__.H$L.                                                    =  000001 L
+    _CLK_GetClockFreq                                              ****** GX
+  9 _USART_ClearFlag                                               0002A9 GR
+  9 _USART_ClearITPendingBit                                       000339 GR
+  9 _USART_ClockInit                                               0000AF GR
+  9 _USART_Cmd                                                     0000D4 GR
+  9 _USART_DMACmd                                                  0001DC GR
+  9 _USART_DeInit                                                  000000 GR
+  9 _USART_GetFlagStatus                                           000281 GR
+  9 _USART_GetITStatus                                             0002B2 GR
+  9 _USART_HalfDuplexCmd                                           00017B GR
+  9 _USART_ITConfig                                                0001F8 GR
+  9 _USART_Init                                                    00001B GR
+  9 _USART_IrDACmd                                                 0001CA GR
+  9 _USART_IrDAConfig                                              0001B8 GR
+  9 _USART_ReceiveData8                                            0000F7 GR
+  9 _USART_ReceiveData9                                            0000FC GR
+  9 _USART_ReceiverWakeUpCmd                                       000149 GR
+  9 _USART_SendBreak                                               0000ED GR
+  9 _USART_SendData8                                               00011A GR
+  9 _USART_SendData9                                               000121 GR
+  9 _USART_SetAddress                                              00015B GR
+  9 _USART_SetGuardTime                                            0001B1 GR
+  9 _USART_SetPrescaler                                            0000E6 GR
+  9 _USART_SmartCardCmd                                            00018D GR
+  9 _USART_SmartCardNACKCmd                                        00019F GR
+  9 _USART_WakeUpConfig                                            00016B GR
+    __divulong                                                     ****** GX
+
+
+ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
+Hexadecimal [24-Bits]
+
+Area Table
+
+   0 _CODE                                      size      0   flags    0
+   1 DATA                                       size      0   flags    0
+   2 INITIALIZED                                size      0   flags    0
+   3 DABS                                       size      0   flags    8
+   4 HOME                                       size      0   flags    0
+   5 GSINIT                                     size      0   flags    0
+   6 GSFINAL                                    size      0   flags    0
+   7 CONST                                      size      0   flags    0
+   8 INITIALIZER                                size      0   flags    0
+   9 CODE                                       size    340   flags    0
+   A CABS                                       size      0   flags    8
+

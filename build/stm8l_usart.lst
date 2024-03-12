@@ -1,0 +1,897 @@
+                                      1 ;--------------------------------------------------------
+                                      2 ; File Created by SDCC : free open source ANSI-C Compiler
+                                      3 ; Version 4.0.0 #11528 (Linux)
+                                      4 ;--------------------------------------------------------
+                                      5 	.module stm8l_usart
+                                      6 	.optsdcc -mstm8
+                                      7 	
+                                      8 ;--------------------------------------------------------
+                                      9 ; Public variables in this module
+                                     10 ;--------------------------------------------------------
+                                     11 	.globl _CLK_GetClockFreq
+                                     12 	.globl _USART_DeInit
+                                     13 	.globl _USART_Init
+                                     14 	.globl _USART_ClockInit
+                                     15 	.globl _USART_Cmd
+                                     16 	.globl _USART_SetPrescaler
+                                     17 	.globl _USART_SendBreak
+                                     18 	.globl _USART_ReceiveData8
+                                     19 	.globl _USART_ReceiveData9
+                                     20 	.globl _USART_SendData8
+                                     21 	.globl _USART_SendData9
+                                     22 	.globl _USART_ReceiverWakeUpCmd
+                                     23 	.globl _USART_SetAddress
+                                     24 	.globl _USART_WakeUpConfig
+                                     25 	.globl _USART_HalfDuplexCmd
+                                     26 	.globl _USART_SmartCardCmd
+                                     27 	.globl _USART_SmartCardNACKCmd
+                                     28 	.globl _USART_SetGuardTime
+                                     29 	.globl _USART_IrDAConfig
+                                     30 	.globl _USART_IrDACmd
+                                     31 	.globl _USART_DMACmd
+                                     32 	.globl _USART_ITConfig
+                                     33 	.globl _USART_GetFlagStatus
+                                     34 	.globl _USART_ClearFlag
+                                     35 	.globl _USART_GetITStatus
+                                     36 	.globl _USART_ClearITPendingBit
+                                     37 ;--------------------------------------------------------
+                                     38 ; ram data
+                                     39 ;--------------------------------------------------------
+                                     40 	.area DATA
+                                     41 ;--------------------------------------------------------
+                                     42 ; ram data
+                                     43 ;--------------------------------------------------------
+                                     44 	.area INITIALIZED
+                                     45 ;--------------------------------------------------------
+                                     46 ; absolute external ram data
+                                     47 ;--------------------------------------------------------
+                                     48 	.area DABS (ABS)
+                                     49 
+                                     50 ; default segment ordering for linker
+                                     51 	.area HOME
+                                     52 	.area GSINIT
+                                     53 	.area GSFINAL
+                                     54 	.area CONST
+                                     55 	.area INITIALIZER
+                                     56 	.area CODE
+                                     57 
+                                     58 ;--------------------------------------------------------
+                                     59 ; global & static initialisations
+                                     60 ;--------------------------------------------------------
+                                     61 	.area HOME
+                                     62 	.area GSINIT
+                                     63 	.area GSFINAL
+                                     64 	.area GSINIT
+                                     65 ;--------------------------------------------------------
+                                     66 ; Home
+                                     67 ;--------------------------------------------------------
+                                     68 	.area HOME
+                                     69 	.area HOME
+                                     70 ;--------------------------------------------------------
+                                     71 ; code
+                                     72 ;--------------------------------------------------------
+                                     73 	.area CODE
+                                     74 ;	libs/stm8l_usart.c: 148: void USART_DeInit(USART_TypeDef* USARTx)
+                                     75 ;	-----------------------------------------
+                                     76 ;	 function USART_DeInit
+                                     77 ;	-----------------------------------------
+      000000                         78 _USART_DeInit:
+                                     79 ;	libs/stm8l_usart.c: 153: (void) USARTx->SR;
+      000000 16 03            [ 2]   80 	ldw	y, (0x03, sp)
+      000002 90 F6            [ 1]   81 	ld	a, (y)
+                                     82 ;	libs/stm8l_usart.c: 154: (void) USARTx->DR;
+      000004 93               [ 1]   83 	ldw	x, y
+      000005 E6 01            [ 1]   84 	ld	a, (0x1, x)
+                                     85 ;	libs/stm8l_usart.c: 156: USARTx->BRR2 = USART_BRR2_RESET_VALUE;  /* Set USART_BRR2 to reset value 0x00 */
+      000007 93               [ 1]   86 	ldw	x, y
+      000008 6F 03            [ 1]   87 	clr	(0x0003, x)
+                                     88 ;	libs/stm8l_usart.c: 157: USARTx->BRR1 = USART_BRR1_RESET_VALUE;  /* Set USART_BRR1 to reset value 0x00 */
+      00000A 93               [ 1]   89 	ldw	x, y
+      00000B 5C               [ 1]   90 	incw	x
+      00000C 5C               [ 1]   91 	incw	x
+      00000D 7F               [ 1]   92 	clr	(x)
+                                     93 ;	libs/stm8l_usart.c: 159: USARTx->CR1 = USART_CR1_RESET_VALUE;  /* Set USART_CR1 to reset value 0x00 */
+      00000E 93               [ 1]   94 	ldw	x, y
+      00000F 6F 04            [ 1]   95 	clr	(0x0004, x)
+                                     96 ;	libs/stm8l_usart.c: 160: USARTx->CR2 = USART_CR2_RESET_VALUE;  /* Set USART_CR2 to reset value 0x00 */
+      000011 93               [ 1]   97 	ldw	x, y
+      000012 6F 05            [ 1]   98 	clr	(0x0005, x)
+                                     99 ;	libs/stm8l_usart.c: 161: USARTx->CR3 = USART_CR3_RESET_VALUE;  /* Set USART_CR3 to reset value 0x00 */
+      000014 93               [ 1]  100 	ldw	x, y
+      000015 6F 06            [ 1]  101 	clr	(0x0006, x)
+                                    102 ;	libs/stm8l_usart.c: 162: USARTx->CR4 = USART_CR4_RESET_VALUE;  /* Set USART_CR4 to reset value 0x00 */
+      000017 93               [ 1]  103 	ldw	x, y
+      000018 6F 07            [ 1]  104 	clr	(0x0007, x)
+                                    105 ;	libs/stm8l_usart.c: 163: }
+      00001A 81               [ 4]  106 	ret
+                                    107 ;	libs/stm8l_usart.c: 192: void USART_Init(USART_TypeDef* USARTx, uint32_t BaudRate, USART_WordLength_TypeDef
+                                    108 ;	-----------------------------------------
+                                    109 ;	 function USART_Init
+                                    110 ;	-----------------------------------------
+      00001B                        111 _USART_Init:
+      00001B 52 0B            [ 2]  112 	sub	sp, #11
+                                    113 ;	libs/stm8l_usart.c: 210: USARTx->CR1 &= (uint8_t)(~(USART_CR1_PCEN | USART_CR1_PS | USART_CR1_M));
+      00001D 16 0E            [ 2]  114 	ldw	y, (0x0e, sp)
+      00001F 17 01            [ 2]  115 	ldw	(0x01, sp), y
+      000021 93               [ 1]  116 	ldw	x, y
+      000022 1C 00 04         [ 2]  117 	addw	x, #0x0004
+      000025 F6               [ 1]  118 	ld	a, (x)
+      000026 A4 E9            [ 1]  119 	and	a, #0xe9
+      000028 6B 0B            [ 1]  120 	ld	(0x0b, sp), a
+      00002A F7               [ 1]  121 	ld	(x), a
+                                    122 ;	libs/stm8l_usart.c: 213: USARTx->CR1 |= (uint8_t)((uint8_t)USART_WordLength | (uint8_t)USART_Parity);
+      00002B F6               [ 1]  123 	ld	a, (x)
+      00002C 7B 14            [ 1]  124 	ld	a, (0x14, sp)
+      00002E 1A 16            [ 1]  125 	or	a, (0x16, sp)
+      000030 1A 0B            [ 1]  126 	or	a, (0x0b, sp)
+      000032 F7               [ 1]  127 	ld	(x), a
+                                    128 ;	libs/stm8l_usart.c: 216: USARTx->CR3 &= (uint8_t)(~USART_CR3_STOP);
+      000033 1E 01            [ 2]  129 	ldw	x, (0x01, sp)
+      000035 1C 00 06         [ 2]  130 	addw	x, #0x0006
+      000038 F6               [ 1]  131 	ld	a, (x)
+      000039 A4 CF            [ 1]  132 	and	a, #0xcf
+      00003B F7               [ 1]  133 	ld	(x), a
+                                    134 ;	libs/stm8l_usart.c: 218: USARTx->CR3 |= (uint8_t)USART_StopBits;
+      00003C 88               [ 1]  135 	push	a
+      00003D F6               [ 1]  136 	ld	a, (x)
+      00003E 84               [ 1]  137 	pop	a
+      00003F 1A 15            [ 1]  138 	or	a, (0x15, sp)
+      000041 F7               [ 1]  139 	ld	(x), a
+                                    140 ;	libs/stm8l_usart.c: 221: USARTx->BRR1 &= (uint8_t)(~USART_BRR1_DIVM);
+      000042 1E 01            [ 2]  141 	ldw	x, (0x01, sp)
+      000044 5C               [ 1]  142 	incw	x
+      000045 5C               [ 1]  143 	incw	x
+      000046 1F 03            [ 2]  144 	ldw	(0x03, sp), x
+      000048 F6               [ 1]  145 	ld	a, (x)
+      000049 1E 03            [ 2]  146 	ldw	x, (0x03, sp)
+      00004B 7F               [ 1]  147 	clr	(x)
+                                    148 ;	libs/stm8l_usart.c: 223: USARTx->BRR2 &= (uint8_t)(~USART_BRR2_DIVM);
+      00004C 1E 01            [ 2]  149 	ldw	x, (0x01, sp)
+      00004E 1C 00 03         [ 2]  150 	addw	x, #0x0003
+      000051 1F 05            [ 2]  151 	ldw	(0x05, sp), x
+      000053 F6               [ 1]  152 	ld	a, (x)
+      000054 A4 0F            [ 1]  153 	and	a, #0x0f
+      000056 1E 05            [ 2]  154 	ldw	x, (0x05, sp)
+      000058 F7               [ 1]  155 	ld	(x), a
+                                    156 ;	libs/stm8l_usart.c: 225: USARTx->BRR2 &= (uint8_t)(~USART_BRR2_DIVF);
+      000059 1E 05            [ 2]  157 	ldw	x, (0x05, sp)
+      00005B 88               [ 1]  158 	push	a
+      00005C F6               [ 1]  159 	ld	a, (x)
+      00005D 84               [ 1]  160 	pop	a
+      00005E A4 F0            [ 1]  161 	and	a, #0xf0
+      000060 1E 05            [ 2]  162 	ldw	x, (0x05, sp)
+      000062 F7               [ 1]  163 	ld	(x), a
+                                    164 ;	libs/stm8l_usart.c: 227: BaudRate_Mantissa  = (uint32_t)(CLK_GetClockFreq() / BaudRate );
+      000063 CDr00r00         [ 4]  165 	call	_CLK_GetClockFreq
+      000066 1F 0A            [ 2]  166 	ldw	(0x0a, sp), x
+      000068 1E 12            [ 2]  167 	ldw	x, (0x12, sp)
+      00006A 89               [ 2]  168 	pushw	x
+      00006B 1E 12            [ 2]  169 	ldw	x, (0x12, sp)
+      00006D 89               [ 2]  170 	pushw	x
+      00006E 1E 0E            [ 2]  171 	ldw	x, (0x0e, sp)
+      000070 89               [ 2]  172 	pushw	x
+      000071 90 89            [ 2]  173 	pushw	y
+      000073 CDr00r00         [ 4]  174 	call	__divulong
+      000076 5B 08            [ 2]  175 	addw	sp, #8
+      000078 1F 09            [ 2]  176 	ldw	(0x09, sp), x
+      00007A 17 07            [ 2]  177 	ldw	(0x07, sp), y
+                                    178 ;	libs/stm8l_usart.c: 229: USARTx->BRR2 = (uint8_t)((BaudRate_Mantissa >> (uint8_t)8) & (uint8_t)0xF0);
+      00007C 16 09            [ 2]  179 	ldw	y, (0x09, sp)
+      00007E 90 9E            [ 1]  180 	ld	a, yh
+      000080 A4 F0            [ 1]  181 	and	a, #0xf0
+      000082 6B 0B            [ 1]  182 	ld	(0x0b, sp), a
+      000084 1E 05            [ 2]  183 	ldw	x, (0x05, sp)
+      000086 7B 0B            [ 1]  184 	ld	a, (0x0b, sp)
+      000088 F7               [ 1]  185 	ld	(x), a
+                                    186 ;	libs/stm8l_usart.c: 231: USARTx->BRR2 |= (uint8_t)(BaudRate_Mantissa & (uint8_t)0x0F);
+      000089 1E 05            [ 2]  187 	ldw	x, (0x05, sp)
+      00008B F6               [ 1]  188 	ld	a, (x)
+      00008C 7B 0A            [ 1]  189 	ld	a, (0x0a, sp)
+      00008E A4 0F            [ 1]  190 	and	a, #0x0f
+      000090 1A 0B            [ 1]  191 	or	a, (0x0b, sp)
+      000092 1E 05            [ 2]  192 	ldw	x, (0x05, sp)
+      000094 F7               [ 1]  193 	ld	(x), a
+                                    194 ;	libs/stm8l_usart.c: 233: USARTx->BRR1 = (uint8_t)(BaudRate_Mantissa >> (uint8_t)4);
+      000095 93               [ 1]  195 	ldw	x, y
+      000096 A6 10            [ 1]  196 	ld	a, #0x10
+      000098 62               [ 2]  197 	div	x, a
+      000099 9F               [ 1]  198 	ld	a, xl
+      00009A 1E 03            [ 2]  199 	ldw	x, (0x03, sp)
+      00009C F7               [ 1]  200 	ld	(x), a
+                                    201 ;	libs/stm8l_usart.c: 236: USARTx->CR2 &= (uint8_t)~(USART_CR2_TEN | USART_CR2_REN);
+      00009D 1E 01            [ 2]  202 	ldw	x, (0x01, sp)
+      00009F 1C 00 05         [ 2]  203 	addw	x, #0x0005
+      0000A2 F6               [ 1]  204 	ld	a, (x)
+      0000A3 A4 F3            [ 1]  205 	and	a, #0xf3
+      0000A5 F7               [ 1]  206 	ld	(x), a
+                                    207 ;	libs/stm8l_usart.c: 238: USARTx->CR2 |= (uint8_t)USART_Mode;
+      0000A6 88               [ 1]  208 	push	a
+      0000A7 F6               [ 1]  209 	ld	a, (x)
+      0000A8 84               [ 1]  210 	pop	a
+      0000A9 1A 17            [ 1]  211 	or	a, (0x17, sp)
+      0000AB F7               [ 1]  212 	ld	(x), a
+                                    213 ;	libs/stm8l_usart.c: 239: }
+      0000AC 5B 0B            [ 2]  214 	addw	sp, #11
+      0000AE 81               [ 4]  215 	ret
+                                    216 ;	libs/stm8l_usart.c: 264: void USART_ClockInit(USART_TypeDef* USARTx, USART_Clock_TypeDef USART_Clock,
+                                    217 ;	-----------------------------------------
+                                    218 ;	 function USART_ClockInit
+                                    219 ;	-----------------------------------------
+      0000AF                        220 _USART_ClockInit:
+      0000AF 88               [ 1]  221 	push	a
+                                    222 ;	libs/stm8l_usart.c: 275: USARTx->CR3 &= (uint8_t)~(USART_CR3_CPOL | USART_CR3_CPHA | USART_CR3_LBCL);
+      0000B0 1E 04            [ 2]  223 	ldw	x, (0x04, sp)
+      0000B2 1C 00 06         [ 2]  224 	addw	x, #0x0006
+      0000B5 F6               [ 1]  225 	ld	a, (x)
+      0000B6 A4 F8            [ 1]  226 	and	a, #0xf8
+      0000B8 6B 01            [ 1]  227 	ld	(0x01, sp), a
+      0000BA F7               [ 1]  228 	ld	(x), a
+                                    229 ;	libs/stm8l_usart.c: 277: USARTx->CR3 |= (uint8_t)((uint8_t)((uint8_t)(USART_CPOL | (uint8_t)USART_CPHA ) | USART_LastBit));
+      0000BB F6               [ 1]  230 	ld	a, (x)
+      0000BC 7B 07            [ 1]  231 	ld	a, (0x07, sp)
+      0000BE 1A 08            [ 1]  232 	or	a, (0x08, sp)
+      0000C0 1A 09            [ 1]  233 	or	a, (0x09, sp)
+      0000C2 1A 01            [ 1]  234 	or	a, (0x01, sp)
+      0000C4 F7               [ 1]  235 	ld	(x), a
+                                    236 ;	libs/stm8l_usart.c: 275: USARTx->CR3 &= (uint8_t)~(USART_CR3_CPOL | USART_CR3_CPHA | USART_CR3_LBCL);
+      0000C5 F6               [ 1]  237 	ld	a, (x)
+                                    238 ;	libs/stm8l_usart.c: 279: if (USART_Clock != USART_Clock_Disable)
+      0000C6 0D 06            [ 1]  239 	tnz	(0x06, sp)
+      0000C8 27 05            [ 1]  240 	jreq	00102$
+                                    241 ;	libs/stm8l_usart.c: 281: USARTx->CR3 |= (uint8_t)(USART_CR3_CLKEN); /* Set the Clock Enable bit */
+      0000CA AA 08            [ 1]  242 	or	a, #0x08
+      0000CC F7               [ 1]  243 	ld	(x), a
+      0000CD 20 03            [ 2]  244 	jra	00104$
+      0000CF                        245 00102$:
+                                    246 ;	libs/stm8l_usart.c: 285: USARTx->CR3 &= (uint8_t)(~USART_CR3_CLKEN); /* Clear the Clock Enable bit */
+      0000CF A4 F7            [ 1]  247 	and	a, #0xf7
+      0000D1 F7               [ 1]  248 	ld	(x), a
+      0000D2                        249 00104$:
+                                    250 ;	libs/stm8l_usart.c: 287: }
+      0000D2 84               [ 1]  251 	pop	a
+      0000D3 81               [ 4]  252 	ret
+                                    253 ;	libs/stm8l_usart.c: 296: void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
+                                    254 ;	-----------------------------------------
+                                    255 ;	 function USART_Cmd
+                                    256 ;	-----------------------------------------
+      0000D4                        257 _USART_Cmd:
+                                    258 ;	libs/stm8l_usart.c: 300: USARTx->CR1 &= (uint8_t)(~USART_CR1_USARTD); /**< USART Enable */
+      0000D4 1E 03            [ 2]  259 	ldw	x, (0x03, sp)
+      0000D6 1C 00 04         [ 2]  260 	addw	x, #0x0004
+      0000D9 F6               [ 1]  261 	ld	a, (x)
+                                    262 ;	libs/stm8l_usart.c: 298: if (NewState != DISABLE)
+      0000DA 0D 05            [ 1]  263 	tnz	(0x05, sp)
+      0000DC 27 04            [ 1]  264 	jreq	00102$
+                                    265 ;	libs/stm8l_usart.c: 300: USARTx->CR1 &= (uint8_t)(~USART_CR1_USARTD); /**< USART Enable */
+      0000DE A4 DF            [ 1]  266 	and	a, #0xdf
+      0000E0 F7               [ 1]  267 	ld	(x), a
+      0000E1 81               [ 4]  268 	ret
+      0000E2                        269 00102$:
+                                    270 ;	libs/stm8l_usart.c: 304: USARTx->CR1 |= USART_CR1_USARTD;  /**< USART Disable (for low power consumption) */
+      0000E2 AA 20            [ 1]  271 	or	a, #0x20
+      0000E4 F7               [ 1]  272 	ld	(x), a
+                                    273 ;	libs/stm8l_usart.c: 306: }
+      0000E5 81               [ 4]  274 	ret
+                                    275 ;	libs/stm8l_usart.c: 329: void USART_SetPrescaler(USART_TypeDef* USARTx, uint8_t USART_Prescaler)
+                                    276 ;	-----------------------------------------
+                                    277 ;	 function USART_SetPrescaler
+                                    278 ;	-----------------------------------------
+      0000E6                        279 _USART_SetPrescaler:
+                                    280 ;	libs/stm8l_usart.c: 332: USARTx->PSCR = USART_Prescaler;
+      0000E6 1E 03            [ 2]  281 	ldw	x, (0x03, sp)
+      0000E8 7B 05            [ 1]  282 	ld	a, (0x05, sp)
+      0000EA E7 0A            [ 1]  283 	ld	(0x000a, x), a
+                                    284 ;	libs/stm8l_usart.c: 333: }
+      0000EC 81               [ 4]  285 	ret
+                                    286 ;	libs/stm8l_usart.c: 340: void USART_SendBreak(USART_TypeDef* USARTx)
+                                    287 ;	-----------------------------------------
+                                    288 ;	 function USART_SendBreak
+                                    289 ;	-----------------------------------------
+      0000ED                        290 _USART_SendBreak:
+                                    291 ;	libs/stm8l_usart.c: 342: USARTx->CR2 |= USART_CR2_SBK;
+      0000ED 1E 03            [ 2]  292 	ldw	x, (0x03, sp)
+      0000EF 1C 00 05         [ 2]  293 	addw	x, #0x0005
+      0000F2 F6               [ 1]  294 	ld	a, (x)
+      0000F3 AA 01            [ 1]  295 	or	a, #0x01
+      0000F5 F7               [ 1]  296 	ld	(x), a
+                                    297 ;	libs/stm8l_usart.c: 343: }
+      0000F6 81               [ 4]  298 	ret
+                                    299 ;	libs/stm8l_usart.c: 382: uint8_t USART_ReceiveData8(USART_TypeDef* USARTx)
+                                    300 ;	-----------------------------------------
+                                    301 ;	 function USART_ReceiveData8
+                                    302 ;	-----------------------------------------
+      0000F7                        303 _USART_ReceiveData8:
+                                    304 ;	libs/stm8l_usart.c: 384: return USARTx->DR;
+      0000F7 1E 03            [ 2]  305 	ldw	x, (0x03, sp)
+      0000F9 E6 01            [ 1]  306 	ld	a, (0x1, x)
+                                    307 ;	libs/stm8l_usart.c: 385: }
+      0000FB 81               [ 4]  308 	ret
+                                    309 ;	libs/stm8l_usart.c: 392: uint16_t USART_ReceiveData9(USART_TypeDef* USARTx)
+                                    310 ;	-----------------------------------------
+                                    311 ;	 function USART_ReceiveData9
+                                    312 ;	-----------------------------------------
+      0000FC                        313 _USART_ReceiveData9:
+      0000FC 52 02            [ 2]  314 	sub	sp, #2
+                                    315 ;	libs/stm8l_usart.c: 396: temp = ((uint16_t)(((uint16_t)((uint16_t)USARTx->CR1 & (uint16_t)USART_CR1_R8)) << 1));
+      0000FE 16 05            [ 2]  316 	ldw	y, (0x05, sp)
+      000100 93               [ 1]  317 	ldw	x, y
+      000101 E6 04            [ 1]  318 	ld	a, (0x4, x)
+      000103 A4 80            [ 1]  319 	and	a, #0x80
+      000105 97               [ 1]  320 	ld	xl, a
+      000106 4F               [ 1]  321 	clr	a
+      000107 95               [ 1]  322 	ld	xh, a
+      000108 58               [ 2]  323 	sllw	x
+      000109 1F 01            [ 2]  324 	ldw	(0x01, sp), x
+                                    325 ;	libs/stm8l_usart.c: 397: return (uint16_t)( ((uint16_t)((uint16_t)USARTx->DR) | temp) & ((uint16_t)0x01FF));
+      00010B 90 E6 01         [ 1]  326 	ld	a, (0x1, y)
+      00010E 5F               [ 1]  327 	clrw	x
+      00010F 1A 02            [ 1]  328 	or	a, (0x02, sp)
+      000111 02               [ 1]  329 	rlwa	x
+      000112 1A 01            [ 1]  330 	or	a, (0x01, sp)
+      000114 A4 01            [ 1]  331 	and	a, #0x01
+      000116 95               [ 1]  332 	ld	xh, a
+                                    333 ;	libs/stm8l_usart.c: 398: }
+      000117 5B 02            [ 2]  334 	addw	sp, #2
+      000119 81               [ 4]  335 	ret
+                                    336 ;	libs/stm8l_usart.c: 405: void USART_SendData8(USART_TypeDef* USARTx, uint8_t Data)
+                                    337 ;	-----------------------------------------
+                                    338 ;	 function USART_SendData8
+                                    339 ;	-----------------------------------------
+      00011A                        340 _USART_SendData8:
+                                    341 ;	libs/stm8l_usart.c: 408: USARTx->DR = Data;
+      00011A 1E 03            [ 2]  342 	ldw	x, (0x03, sp)
+      00011C 5C               [ 1]  343 	incw	x
+      00011D 7B 05            [ 1]  344 	ld	a, (0x05, sp)
+      00011F F7               [ 1]  345 	ld	(x), a
+                                    346 ;	libs/stm8l_usart.c: 409: }
+      000120 81               [ 4]  347 	ret
+                                    348 ;	libs/stm8l_usart.c: 418: void USART_SendData9(USART_TypeDef* USARTx, uint16_t Data)
+                                    349 ;	-----------------------------------------
+                                    350 ;	 function USART_SendData9
+                                    351 ;	-----------------------------------------
+      000121                        352 _USART_SendData9:
+      000121 52 03            [ 2]  353 	sub	sp, #3
+                                    354 ;	libs/stm8l_usart.c: 423: USARTx->CR1 &= ((uint8_t)~USART_CR1_T8);
+      000123 16 06            [ 2]  355 	ldw	y, (0x06, sp)
+      000125 93               [ 1]  356 	ldw	x, y
+      000126 1C 00 04         [ 2]  357 	addw	x, #0x0004
+      000129 F6               [ 1]  358 	ld	a, (x)
+      00012A A4 BF            [ 1]  359 	and	a, #0xbf
+      00012C 6B 01            [ 1]  360 	ld	(0x01, sp), a
+      00012E F7               [ 1]  361 	ld	(x), a
+                                    362 ;	libs/stm8l_usart.c: 426: USARTx->CR1 |= (uint8_t)(((uint8_t)(Data >> 2)) & USART_CR1_T8);
+      00012F F6               [ 1]  363 	ld	a, (x)
+      000130 7B 08            [ 1]  364 	ld	a, (0x08, sp)
+      000132 6B 02            [ 1]  365 	ld	(0x02, sp), a
+      000134 7B 09            [ 1]  366 	ld	a, (0x09, sp)
+      000136 04 02            [ 1]  367 	srl	(0x02, sp)
+      000138 46               [ 1]  368 	rrc	a
+      000139 04 02            [ 1]  369 	srl	(0x02, sp)
+      00013B 46               [ 1]  370 	rrc	a
+      00013C A4 40            [ 1]  371 	and	a, #0x40
+      00013E 1A 01            [ 1]  372 	or	a, (0x01, sp)
+      000140 F7               [ 1]  373 	ld	(x), a
+                                    374 ;	libs/stm8l_usart.c: 429: USARTx->DR   = (uint8_t)(Data);
+      000141 93               [ 1]  375 	ldw	x, y
+      000142 5C               [ 1]  376 	incw	x
+      000143 7B 09            [ 1]  377 	ld	a, (0x09, sp)
+      000145 F7               [ 1]  378 	ld	(x), a
+                                    379 ;	libs/stm8l_usart.c: 430: }
+      000146 5B 03            [ 2]  380 	addw	sp, #3
+      000148 81               [ 4]  381 	ret
+                                    382 ;	libs/stm8l_usart.c: 473: void USART_ReceiverWakeUpCmd(USART_TypeDef* USARTx, FunctionalState NewState)
+                                    383 ;	-----------------------------------------
+                                    384 ;	 function USART_ReceiverWakeUpCmd
+                                    385 ;	-----------------------------------------
+      000149                        386 _USART_ReceiverWakeUpCmd:
+                                    387 ;	libs/stm8l_usart.c: 480: USARTx->CR2 |= USART_CR2_RWU;
+      000149 1E 03            [ 2]  388 	ldw	x, (0x03, sp)
+      00014B 1C 00 05         [ 2]  389 	addw	x, #0x0005
+      00014E F6               [ 1]  390 	ld	a, (x)
+                                    391 ;	libs/stm8l_usart.c: 477: if (NewState != DISABLE)
+      00014F 0D 05            [ 1]  392 	tnz	(0x05, sp)
+      000151 27 04            [ 1]  393 	jreq	00102$
+                                    394 ;	libs/stm8l_usart.c: 480: USARTx->CR2 |= USART_CR2_RWU;
+      000153 AA 02            [ 1]  395 	or	a, #0x02
+      000155 F7               [ 1]  396 	ld	(x), a
+      000156 81               [ 4]  397 	ret
+      000157                        398 00102$:
+                                    399 ;	libs/stm8l_usart.c: 485: USARTx->CR2 &= ((uint8_t)~USART_CR2_RWU);
+      000157 A4 FD            [ 1]  400 	and	a, #0xfd
+      000159 F7               [ 1]  401 	ld	(x), a
+                                    402 ;	libs/stm8l_usart.c: 487: }
+      00015A 81               [ 4]  403 	ret
+                                    404 ;	libs/stm8l_usart.c: 496: void USART_SetAddress(USART_TypeDef* USARTx, uint8_t USART_Address)
+                                    405 ;	-----------------------------------------
+                                    406 ;	 function USART_SetAddress
+                                    407 ;	-----------------------------------------
+      00015B                        408 _USART_SetAddress:
+                                    409 ;	libs/stm8l_usart.c: 502: USARTx->CR4 &= ((uint8_t)~USART_CR4_ADD);
+      00015B 1E 03            [ 2]  410 	ldw	x, (0x03, sp)
+      00015D 1C 00 07         [ 2]  411 	addw	x, #0x0007
+      000160 F6               [ 1]  412 	ld	a, (x)
+      000161 A4 F0            [ 1]  413 	and	a, #0xf0
+      000163 F7               [ 1]  414 	ld	(x), a
+                                    415 ;	libs/stm8l_usart.c: 504: USARTx->CR4 |= USART_Address;
+      000164 88               [ 1]  416 	push	a
+      000165 F6               [ 1]  417 	ld	a, (x)
+      000166 84               [ 1]  418 	pop	a
+      000167 1A 05            [ 1]  419 	or	a, (0x05, sp)
+      000169 F7               [ 1]  420 	ld	(x), a
+                                    421 ;	libs/stm8l_usart.c: 505: }
+      00016A 81               [ 4]  422 	ret
+                                    423 ;	libs/stm8l_usart.c: 515: void USART_WakeUpConfig(USART_TypeDef* USARTx, USART_WakeUp_TypeDef USART_WakeUp)
+                                    424 ;	-----------------------------------------
+                                    425 ;	 function USART_WakeUpConfig
+                                    426 ;	-----------------------------------------
+      00016B                        427 _USART_WakeUpConfig:
+                                    428 ;	libs/stm8l_usart.c: 519: USARTx->CR1 &= ((uint8_t)~USART_CR1_WAKE);
+      00016B 1E 03            [ 2]  429 	ldw	x, (0x03, sp)
+      00016D 1C 00 04         [ 2]  430 	addw	x, #0x0004
+      000170 F6               [ 1]  431 	ld	a, (x)
+      000171 A4 F7            [ 1]  432 	and	a, #0xf7
+      000173 F7               [ 1]  433 	ld	(x), a
+                                    434 ;	libs/stm8l_usart.c: 520: USARTx->CR1 |= (uint8_t)USART_WakeUp;
+      000174 88               [ 1]  435 	push	a
+      000175 F6               [ 1]  436 	ld	a, (x)
+      000176 84               [ 1]  437 	pop	a
+      000177 1A 05            [ 1]  438 	or	a, (0x05, sp)
+      000179 F7               [ 1]  439 	ld	(x), a
+                                    440 ;	libs/stm8l_usart.c: 521: }
+      00017A 81               [ 4]  441 	ret
+                                    442 ;	libs/stm8l_usart.c: 566: void USART_HalfDuplexCmd(USART_TypeDef* USARTx, FunctionalState NewState)
+                                    443 ;	-----------------------------------------
+                                    444 ;	 function USART_HalfDuplexCmd
+                                    445 ;	-----------------------------------------
+      00017B                        446 _USART_HalfDuplexCmd:
+                                    447 ;	libs/stm8l_usart.c: 572: USARTx->CR5 |= USART_CR5_HDSEL;  /**< USART Half Duplex Enable  */
+      00017B 1E 03            [ 2]  448 	ldw	x, (0x03, sp)
+      00017D 1C 00 08         [ 2]  449 	addw	x, #0x0008
+      000180 F6               [ 1]  450 	ld	a, (x)
+                                    451 ;	libs/stm8l_usart.c: 570: if (NewState != DISABLE)
+      000181 0D 05            [ 1]  452 	tnz	(0x05, sp)
+      000183 27 04            [ 1]  453 	jreq	00102$
+                                    454 ;	libs/stm8l_usart.c: 572: USARTx->CR5 |= USART_CR5_HDSEL;  /**< USART Half Duplex Enable  */
+      000185 AA 08            [ 1]  455 	or	a, #0x08
+      000187 F7               [ 1]  456 	ld	(x), a
+      000188 81               [ 4]  457 	ret
+      000189                        458 00102$:
+                                    459 ;	libs/stm8l_usart.c: 576: USARTx->CR5 &= (uint8_t)~USART_CR5_HDSEL; /**< USART Half Duplex Disable */
+      000189 A4 F7            [ 1]  460 	and	a, #0xf7
+      00018B F7               [ 1]  461 	ld	(x), a
+                                    462 ;	libs/stm8l_usart.c: 578: }
+      00018C 81               [ 4]  463 	ret
+                                    464 ;	libs/stm8l_usart.c: 644: void USART_SmartCardCmd(USART_TypeDef* USARTx, FunctionalState NewState)
+                                    465 ;	-----------------------------------------
+                                    466 ;	 function USART_SmartCardCmd
+                                    467 ;	-----------------------------------------
+      00018D                        468 _USART_SmartCardCmd:
+                                    469 ;	libs/stm8l_usart.c: 651: USARTx->CR5 |= USART_CR5_SCEN;
+      00018D 1E 03            [ 2]  470 	ldw	x, (0x03, sp)
+      00018F 1C 00 08         [ 2]  471 	addw	x, #0x0008
+      000192 F6               [ 1]  472 	ld	a, (x)
+                                    473 ;	libs/stm8l_usart.c: 648: if (NewState != DISABLE)
+      000193 0D 05            [ 1]  474 	tnz	(0x05, sp)
+      000195 27 04            [ 1]  475 	jreq	00102$
+                                    476 ;	libs/stm8l_usart.c: 651: USARTx->CR5 |= USART_CR5_SCEN;
+      000197 AA 20            [ 1]  477 	or	a, #0x20
+      000199 F7               [ 1]  478 	ld	(x), a
+      00019A 81               [ 4]  479 	ret
+      00019B                        480 00102$:
+                                    481 ;	libs/stm8l_usart.c: 656: USARTx->CR5 &= ((uint8_t)(~USART_CR5_SCEN));
+      00019B A4 DF            [ 1]  482 	and	a, #0xdf
+      00019D F7               [ 1]  483 	ld	(x), a
+                                    484 ;	libs/stm8l_usart.c: 658: }
+      00019E 81               [ 4]  485 	ret
+                                    486 ;	libs/stm8l_usart.c: 667: void USART_SmartCardNACKCmd(USART_TypeDef* USARTx, FunctionalState NewState)
+                                    487 ;	-----------------------------------------
+                                    488 ;	 function USART_SmartCardNACKCmd
+                                    489 ;	-----------------------------------------
+      00019F                        490 _USART_SmartCardNACKCmd:
+                                    491 ;	libs/stm8l_usart.c: 674: USARTx->CR5 |= USART_CR5_NACK;
+      00019F 1E 03            [ 2]  492 	ldw	x, (0x03, sp)
+      0001A1 1C 00 08         [ 2]  493 	addw	x, #0x0008
+      0001A4 F6               [ 1]  494 	ld	a, (x)
+                                    495 ;	libs/stm8l_usart.c: 671: if (NewState != DISABLE)
+      0001A5 0D 05            [ 1]  496 	tnz	(0x05, sp)
+      0001A7 27 04            [ 1]  497 	jreq	00102$
+                                    498 ;	libs/stm8l_usart.c: 674: USARTx->CR5 |= USART_CR5_NACK;
+      0001A9 AA 10            [ 1]  499 	or	a, #0x10
+      0001AB F7               [ 1]  500 	ld	(x), a
+      0001AC 81               [ 4]  501 	ret
+      0001AD                        502 00102$:
+                                    503 ;	libs/stm8l_usart.c: 679: USARTx->CR5 &= ((uint8_t)~(USART_CR5_NACK));
+      0001AD A4 EF            [ 1]  504 	and	a, #0xef
+      0001AF F7               [ 1]  505 	ld	(x), a
+                                    506 ;	libs/stm8l_usart.c: 681: }
+      0001B0 81               [ 4]  507 	ret
+                                    508 ;	libs/stm8l_usart.c: 690: void USART_SetGuardTime(USART_TypeDef* USARTx, uint8_t USART_GuardTime)
+                                    509 ;	-----------------------------------------
+                                    510 ;	 function USART_SetGuardTime
+                                    511 ;	-----------------------------------------
+      0001B1                        512 _USART_SetGuardTime:
+                                    513 ;	libs/stm8l_usart.c: 693: USARTx->GTR = USART_GuardTime;
+      0001B1 1E 03            [ 2]  514 	ldw	x, (0x03, sp)
+      0001B3 7B 05            [ 1]  515 	ld	a, (0x05, sp)
+      0001B5 E7 09            [ 1]  516 	ld	(0x0009, x), a
+                                    517 ;	libs/stm8l_usart.c: 694: }
+      0001B7 81               [ 4]  518 	ret
+                                    519 ;	libs/stm8l_usart.c: 751: void USART_IrDAConfig(USART_TypeDef* USARTx, USART_IrDAMode_TypeDef USART_IrDAMode)
+                                    520 ;	-----------------------------------------
+                                    521 ;	 function USART_IrDAConfig
+                                    522 ;	-----------------------------------------
+      0001B8                        523 _USART_IrDAConfig:
+                                    524 ;	libs/stm8l_usart.c: 757: USARTx->CR5 |= USART_CR5_IRLP;
+      0001B8 1E 03            [ 2]  525 	ldw	x, (0x03, sp)
+      0001BA 1C 00 08         [ 2]  526 	addw	x, #0x0008
+      0001BD F6               [ 1]  527 	ld	a, (x)
+                                    528 ;	libs/stm8l_usart.c: 755: if (USART_IrDAMode != USART_IrDAMode_Normal)
+      0001BE 0D 05            [ 1]  529 	tnz	(0x05, sp)
+      0001C0 27 04            [ 1]  530 	jreq	00102$
+                                    531 ;	libs/stm8l_usart.c: 757: USARTx->CR5 |= USART_CR5_IRLP;
+      0001C2 AA 04            [ 1]  532 	or	a, #0x04
+      0001C4 F7               [ 1]  533 	ld	(x), a
+      0001C5 81               [ 4]  534 	ret
+      0001C6                        535 00102$:
+                                    536 ;	libs/stm8l_usart.c: 761: USARTx->CR5 &= ((uint8_t)~USART_CR5_IRLP);
+      0001C6 A4 FB            [ 1]  537 	and	a, #0xfb
+      0001C8 F7               [ 1]  538 	ld	(x), a
+                                    539 ;	libs/stm8l_usart.c: 763: }
+      0001C9 81               [ 4]  540 	ret
+                                    541 ;	libs/stm8l_usart.c: 772: void USART_IrDACmd(USART_TypeDef* USARTx, FunctionalState NewState)
+                                    542 ;	-----------------------------------------
+                                    543 ;	 function USART_IrDACmd
+                                    544 ;	-----------------------------------------
+      0001CA                        545 _USART_IrDACmd:
+                                    546 ;	libs/stm8l_usart.c: 781: USARTx->CR5 |= USART_CR5_IREN;
+      0001CA 1E 03            [ 2]  547 	ldw	x, (0x03, sp)
+      0001CC 1C 00 08         [ 2]  548 	addw	x, #0x0008
+      0001CF F6               [ 1]  549 	ld	a, (x)
+                                    550 ;	libs/stm8l_usart.c: 778: if (NewState != DISABLE)
+      0001D0 0D 05            [ 1]  551 	tnz	(0x05, sp)
+      0001D2 27 04            [ 1]  552 	jreq	00102$
+                                    553 ;	libs/stm8l_usart.c: 781: USARTx->CR5 |= USART_CR5_IREN;
+      0001D4 AA 02            [ 1]  554 	or	a, #0x02
+      0001D6 F7               [ 1]  555 	ld	(x), a
+      0001D7 81               [ 4]  556 	ret
+      0001D8                        557 00102$:
+                                    558 ;	libs/stm8l_usart.c: 786: USARTx->CR5 &= ((uint8_t)~USART_CR5_IREN);
+      0001D8 A4 FD            [ 1]  559 	and	a, #0xfd
+      0001DA F7               [ 1]  560 	ld	(x), a
+                                    561 ;	libs/stm8l_usart.c: 788: }
+      0001DB 81               [ 4]  562 	ret
+                                    563 ;	libs/stm8l_usart.c: 818: void USART_DMACmd(USART_TypeDef* USARTx, USART_DMAReq_TypeDef USART_DMAReq,
+                                    564 ;	-----------------------------------------
+                                    565 ;	 function USART_DMACmd
+                                    566 ;	-----------------------------------------
+      0001DC                        567 _USART_DMACmd:
+      0001DC 88               [ 1]  568 	push	a
+                                    569 ;	libs/stm8l_usart.c: 829: USARTx->CR5 |= (uint8_t) USART_DMAReq;
+      0001DD 1E 04            [ 2]  570 	ldw	x, (0x04, sp)
+      0001DF 1C 00 08         [ 2]  571 	addw	x, #0x0008
+      0001E2 F6               [ 1]  572 	ld	a, (x)
+                                    573 ;	libs/stm8l_usart.c: 825: if (NewState != DISABLE)
+      0001E3 0D 07            [ 1]  574 	tnz	(0x07, sp)
+      0001E5 27 05            [ 1]  575 	jreq	00102$
+                                    576 ;	libs/stm8l_usart.c: 829: USARTx->CR5 |= (uint8_t) USART_DMAReq;
+      0001E7 1A 06            [ 1]  577 	or	a, (0x06, sp)
+      0001E9 F7               [ 1]  578 	ld	(x), a
+      0001EA 20 0A            [ 2]  579 	jra	00104$
+      0001EC                        580 00102$:
+                                    581 ;	libs/stm8l_usart.c: 835: USARTx->CR5 &= (uint8_t)~USART_DMAReq;
+      0001EC 88               [ 1]  582 	push	a
+      0001ED 7B 07            [ 1]  583 	ld	a, (0x07, sp)
+      0001EF 43               [ 1]  584 	cpl	a
+      0001F0 6B 02            [ 1]  585 	ld	(0x02, sp), a
+      0001F2 84               [ 1]  586 	pop	a
+      0001F3 14 01            [ 1]  587 	and	a, (0x01, sp)
+      0001F5 F7               [ 1]  588 	ld	(x), a
+      0001F6                        589 00104$:
+                                    590 ;	libs/stm8l_usart.c: 837: }
+      0001F6 84               [ 1]  591 	pop	a
+      0001F7 81               [ 4]  592 	ret
+                                    593 ;	libs/stm8l_usart.c: 939: void USART_ITConfig(USART_TypeDef* USARTx, USART_IT_TypeDef USART_IT, FunctionalState NewState)
+                                    594 ;	-----------------------------------------
+                                    595 ;	 function USART_ITConfig
+                                    596 ;	-----------------------------------------
+      0001F8                        597 _USART_ITConfig:
+      0001F8 52 07            [ 2]  598 	sub	sp, #7
+                                    599 ;	libs/stm8l_usart.c: 946: usartreg = (uint8_t)((uint16_t)USART_IT >> 0x08);
+      0001FA 1E 0C            [ 2]  600 	ldw	x, (0x0c, sp)
+                                    601 ;	libs/stm8l_usart.c: 948: itpos = (uint8_t)((uint8_t)1 << (uint8_t)((uint8_t)USART_IT & (uint8_t)0x0F));
+      0001FC 7B 0D            [ 1]  602 	ld	a, (0x0d, sp)
+      0001FE A4 0F            [ 1]  603 	and	a, #0x0f
+      000200 88               [ 1]  604 	push	a
+      000201 A6 01            [ 1]  605 	ld	a, #0x01
+      000203 6B 08            [ 1]  606 	ld	(0x08, sp), a
+      000205 84               [ 1]  607 	pop	a
+      000206 4D               [ 1]  608 	tnz	a
+      000207 27 05            [ 1]  609 	jreq	00144$
+      000209                        610 00143$:
+      000209 08 07            [ 1]  611 	sll	(0x07, sp)
+      00020B 4A               [ 1]  612 	dec	a
+      00020C 26 FB            [ 1]  613 	jrne	00143$
+      00020E                        614 00144$:
+                                    615 ;	libs/stm8l_usart.c: 953: if (usartreg == 0x01)
+      00020E 9E               [ 1]  616 	ld	a, xh
+      00020F 4A               [ 1]  617 	dec	a
+      000210 26 05            [ 1]  618 	jrne	00146$
+      000212 A6 01            [ 1]  619 	ld	a, #0x01
+      000214 6B 01            [ 1]  620 	ld	(0x01, sp), a
+      000216 C5                     621 	.byte 0xc5
+      000217                        622 00146$:
+      000217 0F 01            [ 1]  623 	clr	(0x01, sp)
+      000219                        624 00147$:
+                                    625 ;	libs/stm8l_usart.c: 955: USARTx->CR1 |= itpos;
+      000219 16 0A            [ 2]  626 	ldw	y, (0x0a, sp)
+                                    627 ;	libs/stm8l_usart.c: 957: else if (usartreg == 0x05)
+      00021B 9E               [ 1]  628 	ld	a, xh
+      00021C A0 05            [ 1]  629 	sub	a, #0x05
+      00021E 26 04            [ 1]  630 	jrne	00149$
+      000220 4C               [ 1]  631 	inc	a
+      000221 6B 02            [ 1]  632 	ld	(0x02, sp), a
+      000223 C5                     633 	.byte 0xc5
+      000224                        634 00149$:
+      000224 0F 02            [ 1]  635 	clr	(0x02, sp)
+      000226                        636 00150$:
+                                    637 ;	libs/stm8l_usart.c: 955: USARTx->CR1 |= itpos;
+      000226 93               [ 1]  638 	ldw	x, y
+      000227 1C 00 04         [ 2]  639 	addw	x, #0x0004
+      00022A 1F 03            [ 2]  640 	ldw	(0x03, sp), x
+                                    641 ;	libs/stm8l_usart.c: 959: USARTx->CR5 |= itpos;
+      00022C 93               [ 1]  642 	ldw	x, y
+      00022D 1C 00 08         [ 2]  643 	addw	x, #0x0008
+                                    644 ;	libs/stm8l_usart.c: 964: USARTx->CR2 |= itpos;
+      000230 72 A9 00 05      [ 2]  645 	addw	y, #0x0005
+      000234 17 05            [ 2]  646 	ldw	(0x05, sp), y
+                                    647 ;	libs/stm8l_usart.c: 950: if (NewState != DISABLE)
+      000236 0D 0E            [ 1]  648 	tnz	(0x0e, sp)
+      000238 27 22            [ 1]  649 	jreq	00114$
+                                    650 ;	libs/stm8l_usart.c: 953: if (usartreg == 0x01)
+      00023A 0D 01            [ 1]  651 	tnz	(0x01, sp)
+      00023C 27 0A            [ 1]  652 	jreq	00105$
+                                    653 ;	libs/stm8l_usart.c: 955: USARTx->CR1 |= itpos;
+      00023E 1E 03            [ 2]  654 	ldw	x, (0x03, sp)
+      000240 F6               [ 1]  655 	ld	a, (x)
+      000241 1A 07            [ 1]  656 	or	a, (0x07, sp)
+      000243 1E 03            [ 2]  657 	ldw	x, (0x03, sp)
+      000245 F7               [ 1]  658 	ld	(x), a
+      000246 20 36            [ 2]  659 	jra	00116$
+      000248                        660 00105$:
+                                    661 ;	libs/stm8l_usart.c: 957: else if (usartreg == 0x05)
+      000248 0D 02            [ 1]  662 	tnz	(0x02, sp)
+      00024A 27 06            [ 1]  663 	jreq	00102$
+                                    664 ;	libs/stm8l_usart.c: 959: USARTx->CR5 |= itpos;
+      00024C F6               [ 1]  665 	ld	a, (x)
+      00024D 1A 07            [ 1]  666 	or	a, (0x07, sp)
+      00024F F7               [ 1]  667 	ld	(x), a
+      000250 20 2C            [ 2]  668 	jra	00116$
+      000252                        669 00102$:
+                                    670 ;	libs/stm8l_usart.c: 964: USARTx->CR2 |= itpos;
+      000252 1E 05            [ 2]  671 	ldw	x, (0x05, sp)
+      000254 F6               [ 1]  672 	ld	a, (x)
+      000255 1A 07            [ 1]  673 	or	a, (0x07, sp)
+      000257 1E 05            [ 2]  674 	ldw	x, (0x05, sp)
+      000259 F7               [ 1]  675 	ld	(x), a
+      00025A 20 22            [ 2]  676 	jra	00116$
+      00025C                        677 00114$:
+                                    678 ;	libs/stm8l_usart.c: 972: USARTx->CR1 &= (uint8_t)(~itpos);
+      00025C 03 07            [ 1]  679 	cpl	(0x07, sp)
+                                    680 ;	libs/stm8l_usart.c: 970: if (usartreg == 0x01)
+      00025E 0D 01            [ 1]  681 	tnz	(0x01, sp)
+      000260 27 0A            [ 1]  682 	jreq	00111$
+                                    683 ;	libs/stm8l_usart.c: 972: USARTx->CR1 &= (uint8_t)(~itpos);
+      000262 1E 03            [ 2]  684 	ldw	x, (0x03, sp)
+      000264 F6               [ 1]  685 	ld	a, (x)
+      000265 14 07            [ 1]  686 	and	a, (0x07, sp)
+      000267 1E 03            [ 2]  687 	ldw	x, (0x03, sp)
+      000269 F7               [ 1]  688 	ld	(x), a
+      00026A 20 12            [ 2]  689 	jra	00116$
+      00026C                        690 00111$:
+                                    691 ;	libs/stm8l_usart.c: 974: else if (usartreg == 0x05)
+      00026C 0D 02            [ 1]  692 	tnz	(0x02, sp)
+      00026E 27 06            [ 1]  693 	jreq	00108$
+                                    694 ;	libs/stm8l_usart.c: 976: USARTx->CR5 &= (uint8_t)(~itpos);
+      000270 F6               [ 1]  695 	ld	a, (x)
+      000271 14 07            [ 1]  696 	and	a, (0x07, sp)
+      000273 F7               [ 1]  697 	ld	(x), a
+      000274 20 08            [ 2]  698 	jra	00116$
+      000276                        699 00108$:
+                                    700 ;	libs/stm8l_usart.c: 981: USARTx->CR2 &= (uint8_t)(~itpos);
+      000276 1E 05            [ 2]  701 	ldw	x, (0x05, sp)
+      000278 F6               [ 1]  702 	ld	a, (x)
+      000279 14 07            [ 1]  703 	and	a, (0x07, sp)
+      00027B 1E 05            [ 2]  704 	ldw	x, (0x05, sp)
+      00027D F7               [ 1]  705 	ld	(x), a
+      00027E                        706 00116$:
+                                    707 ;	libs/stm8l_usart.c: 984: }
+      00027E 5B 07            [ 2]  708 	addw	sp, #7
+      000280 81               [ 4]  709 	ret
+                                    710 ;	libs/stm8l_usart.c: 1002: FlagStatus USART_GetFlagStatus(USART_TypeDef* USARTx, USART_FLAG_TypeDef USART_FLAG)
+                                    711 ;	-----------------------------------------
+                                    712 ;	 function USART_GetFlagStatus
+                                    713 ;	-----------------------------------------
+      000281                        714 _USART_GetFlagStatus:
+      000281 88               [ 1]  715 	push	a
+                                    716 ;	libs/stm8l_usart.c: 1009: if (USART_FLAG == USART_FLAG_SBK)
+      000282 16 06            [ 2]  717 	ldw	y, (0x06, sp)
+                                    718 ;	libs/stm8l_usart.c: 1011: if ((USARTx->CR2 & (uint8_t)USART_FLAG) != (uint8_t)0x00)
+      000284 1E 04            [ 2]  719 	ldw	x, (0x04, sp)
+      000286 7B 07            [ 1]  720 	ld	a, (0x07, sp)
+      000288 6B 01            [ 1]  721 	ld	(0x01, sp), a
+                                    722 ;	libs/stm8l_usart.c: 1009: if (USART_FLAG == USART_FLAG_SBK)
+      00028A 90 A3 01 01      [ 2]  723 	cpw	y, #0x0101
+      00028E 26 0D            [ 1]  724 	jrne	00108$
+                                    725 ;	libs/stm8l_usart.c: 1011: if ((USARTx->CR2 & (uint8_t)USART_FLAG) != (uint8_t)0x00)
+      000290 E6 05            [ 1]  726 	ld	a, (0x5, x)
+      000292 14 01            [ 1]  727 	and	a, (0x01, sp)
+      000294 27 04            [ 1]  728 	jreq	00102$
+                                    729 ;	libs/stm8l_usart.c: 1014: status = SET;
+      000296 A6 01            [ 1]  730 	ld	a, #0x01
+      000298 20 0C            [ 2]  731 	jra	00109$
+      00029A                        732 00102$:
+                                    733 ;	libs/stm8l_usart.c: 1019: status = RESET;
+      00029A 4F               [ 1]  734 	clr	a
+      00029B 20 09            [ 2]  735 	jra	00109$
+      00029D                        736 00108$:
+                                    737 ;	libs/stm8l_usart.c: 1024: if ((USARTx->SR & (uint8_t)USART_FLAG) != (uint8_t)0x00)
+      00029D F6               [ 1]  738 	ld	a, (x)
+      00029E 14 01            [ 1]  739 	and	a, (0x01, sp)
+      0002A0 27 03            [ 1]  740 	jreq	00105$
+                                    741 ;	libs/stm8l_usart.c: 1027: status = SET;
+      0002A2 A6 01            [ 1]  742 	ld	a, #0x01
+                                    743 ;	libs/stm8l_usart.c: 1032: status = RESET;
+      0002A4 21                     744 	.byte 0x21
+      0002A5                        745 00105$:
+      0002A5 4F               [ 1]  746 	clr	a
+      0002A6                        747 00109$:
+                                    748 ;	libs/stm8l_usart.c: 1036: return status;
+                                    749 ;	libs/stm8l_usart.c: 1037: }
+      0002A6 5B 01            [ 2]  750 	addw	sp, #1
+      0002A8 81               [ 4]  751 	ret
+                                    752 ;	libs/stm8l_usart.c: 1060: void USART_ClearFlag(USART_TypeDef* USARTx, USART_FLAG_TypeDef USART_FLAG)
+                                    753 ;	-----------------------------------------
+                                    754 ;	 function USART_ClearFlag
+                                    755 ;	-----------------------------------------
+      0002A9                        756 _USART_ClearFlag:
+                                    757 ;	libs/stm8l_usart.c: 1065: USARTx->SR = (uint8_t)((uint16_t)~((uint16_t)USART_FLAG));
+      0002A9 16 03            [ 2]  758 	ldw	y, (0x03, sp)
+      0002AB 1E 05            [ 2]  759 	ldw	x, (0x05, sp)
+      0002AD 53               [ 2]  760 	cplw	x
+      0002AE 9F               [ 1]  761 	ld	a, xl
+      0002AF 90 F7            [ 1]  762 	ld	(y), a
+                                    763 ;	libs/stm8l_usart.c: 1066: }
+      0002B1 81               [ 4]  764 	ret
+                                    765 ;	libs/stm8l_usart.c: 1083: ITStatus USART_GetITStatus(USART_TypeDef* USARTx, USART_IT_TypeDef USART_IT)
+                                    766 ;	-----------------------------------------
+                                    767 ;	 function USART_GetITStatus
+                                    768 ;	-----------------------------------------
+      0002B2                        769 _USART_GetITStatus:
+      0002B2 52 06            [ 2]  770 	sub	sp, #6
+                                    771 ;	libs/stm8l_usart.c: 1096: itpos = (uint8_t)((uint8_t)1 << (uint8_t)((uint8_t)USART_IT & (uint8_t)0x0F));
+      0002B4 7B 0C            [ 1]  772 	ld	a, (0x0c, sp)
+      0002B6 97               [ 1]  773 	ld	xl, a
+      0002B7 A4 0F            [ 1]  774 	and	a, #0x0f
+      0002B9 88               [ 1]  775 	push	a
+      0002BA A6 01            [ 1]  776 	ld	a, #0x01
+      0002BC 6B 07            [ 1]  777 	ld	(0x07, sp), a
+      0002BE 84               [ 1]  778 	pop	a
+      0002BF 4D               [ 1]  779 	tnz	a
+      0002C0 27 05            [ 1]  780 	jreq	00163$
+      0002C2                        781 00162$:
+      0002C2 08 06            [ 1]  782 	sll	(0x06, sp)
+      0002C4 4A               [ 1]  783 	dec	a
+      0002C5 26 FB            [ 1]  784 	jrne	00162$
+      0002C7                        785 00163$:
+                                    786 ;	libs/stm8l_usart.c: 1098: itmask1 = (uint8_t)((uint8_t)USART_IT >> (uint8_t)4);
+      0002C7 9F               [ 1]  787 	ld	a, xl
+      0002C8 4E               [ 1]  788 	swap	a
+      0002C9 A4 0F            [ 1]  789 	and	a, #0x0f
+                                    790 ;	libs/stm8l_usart.c: 1100: itmask2 = (uint8_t)((uint8_t)1 << itmask1);
+      0002CB 88               [ 1]  791 	push	a
+      0002CC A6 01            [ 1]  792 	ld	a, #0x01
+      0002CE 6B 02            [ 1]  793 	ld	(0x02, sp), a
+      0002D0 84               [ 1]  794 	pop	a
+      0002D1 4D               [ 1]  795 	tnz	a
+      0002D2 27 05            [ 1]  796 	jreq	00165$
+      0002D4                        797 00164$:
+      0002D4 08 01            [ 1]  798 	sll	(0x01, sp)
+      0002D6 4A               [ 1]  799 	dec	a
+      0002D7 26 FB            [ 1]  800 	jrne	00164$
+      0002D9                        801 00165$:
+                                    802 ;	libs/stm8l_usart.c: 1103: if (USART_IT == USART_IT_PE)
+      0002D9 16 0B            [ 2]  803 	ldw	y, (0x0b, sp)
+      0002DB 17 02            [ 2]  804 	ldw	(0x02, sp), y
+                                    805 ;	libs/stm8l_usart.c: 1106: enablestatus = (uint8_t)((uint8_t)USARTx->CR1 & itmask2);
+      0002DD 16 09            [ 2]  806 	ldw	y, (0x09, sp)
+                                    807 ;	libs/stm8l_usart.c: 1109: if (((USARTx->SR & itpos) != (uint8_t)0x00) && enablestatus)
+      0002DF 17 04            [ 2]  808 	ldw	(0x04, sp), y
+      0002E1 93               [ 1]  809 	ldw	x, y
+      0002E2 F6               [ 1]  810 	ld	a, (x)
+      0002E3 14 06            [ 1]  811 	and	a, (0x06, sp)
+      0002E5 6B 06            [ 1]  812 	ld	(0x06, sp), a
+                                    813 ;	libs/stm8l_usart.c: 1103: if (USART_IT == USART_IT_PE)
+      0002E7 1E 02            [ 2]  814 	ldw	x, (0x02, sp)
+      0002E9 A3 01 00         [ 2]  815 	cpw	x, #0x0100
+      0002EC 26 16            [ 1]  816 	jrne	00118$
+                                    817 ;	libs/stm8l_usart.c: 1106: enablestatus = (uint8_t)((uint8_t)USARTx->CR1 & itmask2);
+      0002EE 1E 04            [ 2]  818 	ldw	x, (0x04, sp)
+      0002F0 E6 04            [ 1]  819 	ld	a, (0x4, x)
+      0002F2 6B 03            [ 1]  820 	ld	(0x03, sp), a
+      0002F4 14 01            [ 1]  821 	and	a, (0x01, sp)
+                                    822 ;	libs/stm8l_usart.c: 1109: if (((USARTx->SR & itpos) != (uint8_t)0x00) && enablestatus)
+      0002F6 0D 06            [ 1]  823 	tnz	(0x06, sp)
+      0002F8 27 07            [ 1]  824 	jreq	00102$
+      0002FA 4D               [ 1]  825 	tnz	a
+      0002FB 27 04            [ 1]  826 	jreq	00102$
+                                    827 ;	libs/stm8l_usart.c: 1112: pendingbitstatus = SET;
+      0002FD A6 01            [ 1]  828 	ld	a, #0x01
+      0002FF 20 35            [ 2]  829 	jra	00119$
+      000301                        830 00102$:
+                                    831 ;	libs/stm8l_usart.c: 1117: pendingbitstatus = RESET;
+      000301 4F               [ 1]  832 	clr	a
+      000302 20 32            [ 2]  833 	jra	00119$
+      000304                        834 00118$:
+                                    835 ;	libs/stm8l_usart.c: 1124: enablestatus = (uint8_t)((uint8_t)USARTx->CR2 & itmask2);
+      000304 1E 04            [ 2]  836 	ldw	x, (0x04, sp)
+      000306 E6 05            [ 1]  837 	ld	a, (0x5, x)
+      000308 14 01            [ 1]  838 	and	a, (0x01, sp)
+                                    839 ;	libs/stm8l_usart.c: 1121: else if (USART_IT == USART_IT_OR)
+      00030A 1E 02            [ 2]  840 	ldw	x, (0x02, sp)
+      00030C A3 02 35         [ 2]  841 	cpw	x, #0x0235
+      00030F 26 1A            [ 1]  842 	jrne	00115$
+                                    843 ;	libs/stm8l_usart.c: 1124: enablestatus = (uint8_t)((uint8_t)USARTx->CR2 & itmask2);
+      000311 6B 03            [ 1]  844 	ld	(0x03, sp), a
+                                    845 ;	libs/stm8l_usart.c: 1127: temp = (uint8_t)(USARTx->CR5 & USART_CR5_EIE);
+      000313 1E 04            [ 2]  846 	ldw	x, (0x04, sp)
+      000315 E6 08            [ 1]  847 	ld	a, (0x8, x)
+      000317 A4 01            [ 1]  848 	and	a, #0x01
+                                    849 ;	libs/stm8l_usart.c: 1129: if (( (USARTx->SR & itpos) != 0x00) && ((enablestatus || temp)))
+      000319 0D 06            [ 1]  850 	tnz	(0x06, sp)
+      00031B 27 0B            [ 1]  851 	jreq	00106$
+      00031D 0D 03            [ 1]  852 	tnz	(0x03, sp)
+      00031F 26 03            [ 1]  853 	jrne	00105$
+      000321 4D               [ 1]  854 	tnz	a
+      000322 27 04            [ 1]  855 	jreq	00106$
+      000324                        856 00105$:
+                                    857 ;	libs/stm8l_usart.c: 1132: pendingbitstatus = SET;
+      000324 A6 01            [ 1]  858 	ld	a, #0x01
+      000326 20 0E            [ 2]  859 	jra	00119$
+      000328                        860 00106$:
+                                    861 ;	libs/stm8l_usart.c: 1137: pendingbitstatus = RESET;
+      000328 4F               [ 1]  862 	clr	a
+      000329 20 0B            [ 2]  863 	jra	00119$
+      00032B                        864 00115$:
+                                    865 ;	libs/stm8l_usart.c: 1144: enablestatus = (uint8_t)((uint8_t)USARTx->CR2 & itmask2);
+                                    866 ;	libs/stm8l_usart.c: 1146: if (((USARTx->SR & itpos) != (uint8_t)0x00) && enablestatus)
+      00032B 0D 06            [ 1]  867 	tnz	(0x06, sp)
+      00032D 27 06            [ 1]  868 	jreq	00111$
+      00032F 4D               [ 1]  869 	tnz	a
+      000330 27 03            [ 1]  870 	jreq	00111$
+                                    871 ;	libs/stm8l_usart.c: 1149: pendingbitstatus = SET;
+      000332 A6 01            [ 1]  872 	ld	a, #0x01
+                                    873 ;	libs/stm8l_usart.c: 1154: pendingbitstatus = RESET;
+      000334 21                     874 	.byte 0x21
+      000335                        875 00111$:
+      000335 4F               [ 1]  876 	clr	a
+      000336                        877 00119$:
+                                    878 ;	libs/stm8l_usart.c: 1159: return  pendingbitstatus;
+                                    879 ;	libs/stm8l_usart.c: 1160: }
+      000336 5B 06            [ 2]  880 	addw	sp, #6
+      000338 81               [ 4]  881 	ret
+                                    882 ;	libs/stm8l_usart.c: 1183: void USART_ClearITPendingBit(USART_TypeDef* USARTx)//, USART_IT_TypeDef USART_IT)
+                                    883 ;	-----------------------------------------
+                                    884 ;	 function USART_ClearITPendingBit
+                                    885 ;	-----------------------------------------
+      000339                        886 _USART_ClearITPendingBit:
+                                    887 ;	libs/stm8l_usart.c: 1188: USARTx->SR &= (uint8_t)(~USART_SR_TC);
+      000339 1E 03            [ 2]  888 	ldw	x, (0x03, sp)
+      00033B F6               [ 1]  889 	ld	a, (x)
+      00033C A4 BF            [ 1]  890 	and	a, #0xbf
+      00033E F7               [ 1]  891 	ld	(x), a
+                                    892 ;	libs/stm8l_usart.c: 1189: }
+      00033F 81               [ 4]  893 	ret
+                                    894 	.area CODE
+                                    895 	.area CONST
+                                    896 	.area INITIALIZER
+                                    897 	.area CABS (ABS)
