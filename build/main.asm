@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (Linux)
+; Version 4.2.0 #13081 (Linux)
 ;--------------------------------------------------------
 	.module main
 	.optsdcc -mstm8
@@ -44,7 +44,7 @@ _SysCntrl::
 ;--------------------------------------------------------
 	.area INITIALIZED
 ;--------------------------------------------------------
-; Stack segment in internal ram 
+; Stack segment in internal ram
 ;--------------------------------------------------------
 	.area	SSEG
 __start__stack:
@@ -64,7 +64,7 @@ __start__stack:
 	.area CODE
 
 ;--------------------------------------------------------
-; interrupt vector 
+; interrupt vector
 ;--------------------------------------------------------
 	.area HOME
 __interrupt_vect:
@@ -103,7 +103,6 @@ __interrupt_vect:
 	.area GSINIT
 	.area GSFINAL
 	.area GSINIT
-__sdcc_gs_init_startup:
 __sdcc_init_data:
 ; stm8_genXINIT() start
 	ldw x, #l_DATA
@@ -141,68 +140,49 @@ __sdcc_program_startup:
 ;	 function SetTimer
 ;	-----------------------------------------
 _SetTimer:
-;	main.c: 41: switch (tmr) {
-	ld	a, (0x03, sp)
+;	main.c: 40: switch (tmr) {
 	cp	a, #0x00
 	jreq	00101$
-	ld	a, (0x03, sp)
-	dec	a
+	cp	a, #0x01
 	jreq	00102$
-	ld	a, (0x03, sp)
 	cp	a, #0x02
 	jreq	00103$
-	ld	a, (0x03, sp)
-	cp	a, #0x03
-	jreq	00104$
 	ret
-;	main.c: 42: case 0:
+;	main.c: 41: case 0:
 00101$:
-;	main.c: 43: SysCntrl.Timer_0 = value;
-	ldw	x, #(_SysCntrl + 0)
-	ldw	y, (0x04, sp)
-	ldw	(x), y
-;	main.c: 44: break;
+;	main.c: 42: SysCntrl.Timer_0 = value;
+	ldw	_SysCntrl+0, x
+;	main.c: 43: break;
 	ret
-;	main.c: 45: case 1:
+;	main.c: 44: case 1:
 00102$:
-;	main.c: 46: SysCntrl.Timer_1 = value;
-	ldw	x, #(_SysCntrl + 2)
-	ldw	y, (0x04, sp)
-	ldw	(x), y
-;	main.c: 47: break;
+;	main.c: 45: SysCntrl.Timer_1 = value;
+	ldw	_SysCntrl+2, x
+;	main.c: 46: break;
 	ret
-;	main.c: 48: case 2:
+;	main.c: 47: case 2:
 00103$:
-;	main.c: 49: SysCntrl.Timer_2 = value;
-	ldw	x, #(_SysCntrl + 4)
-	ldw	y, (0x04, sp)
-	ldw	(x), y
-;	main.c: 50: break;
+;	main.c: 48: SysCntrl.Timer_2 = value;
+	ldw	_SysCntrl+4, x
+;	main.c: 50: }
+;	main.c: 51: }
 	ret
-;	main.c: 51: case 3:
-00104$:
-;	main.c: 52: SysCntrl.Timer_3 = value;
-	ldw	x, #(_SysCntrl + 6)
-	ldw	y, (0x04, sp)
-	ldw	(x), y
-;	main.c: 54: }
-;	main.c: 56: }
-	ret
-;	main.c: 58: void tick(enum event_t ev)
+;	main.c: 53: void tick(enum event_t ev)
 ;	-----------------------------------------
 ;	 function tick
 ;	-----------------------------------------
 _tick:
-	push	a
-;	main.c: 61: switch (SysCntrl.state) {
-	ld	a, _SysCntrl+10
+	sub	sp, #2
+	ld	(0x02, sp), a
+;	main.c: 55: switch (SysCntrl.state) {
+	ld	a, _SysCntrl+8
 	ld	xl, a
 	cp	a, #0x07
 	jrule	00186$
 	jp	00129$
 00186$:
-;	main.c: 93: if( ev == timer_2){
-	ld	a, (0x04, sp)
+;	main.c: 77: if( ev == timer_2){
+	ld	a, (0x02, sp)
 	sub	a, #0x03
 	jrne	00188$
 	inc	a
@@ -211,8 +191,8 @@ _tick:
 00188$:
 	clr	(0x01, sp)
 00189$:
-;	main.c: 137: if (ev == timer_0){
-	ld	a, (0x04, sp)
+;	main.c: 110: if (ev == timer_0){
+	ld	a, (0x02, sp)
 	dec	a
 	jrne	00191$
 	ld	a, #0x01
@@ -220,7 +200,7 @@ _tick:
 00191$:
 	clr	a
 00192$:
-;	main.c: 61: switch (SysCntrl.state) {
+;	main.c: 55: switch (SysCntrl.state) {
 	rlwa	x
 	clr	a
 	rrwa	x
@@ -236,661 +216,507 @@ _tick:
 	.dw	#00114$
 	.dw	#00117$
 	.dw	#00120$
-;	main.c: 62: case WAIT_PWR_BTN:
+;	main.c: 56: case WAIT_PWR_BTN:
 00101$:
-;	main.c: 63: if (ev == start) {
-	tnz	(0x04, sp)
+;	main.c: 57: if (ev == start) {
+	tnz	(0x02, sp)
 	jrne	00103$
-;	main.c: 65: SetTimer(3, TIMER_1_SEC);
-	push	#0x64
-	push	#0x00
-	push	#0x03
+;	main.c: 58: SetTimer(1, TIMER_1_SEC);
+	ldw	x, #0x0064
+	ld	a, #0x01
 	call	_SetTimer
-	addw	sp, #3
 00103$:
-;	main.c: 68: if ( ev == timer_3){
-	ld	a, (0x04, sp)
-	cp	a, #0x04
+;	main.c: 61: if ( ev == timer_1){
+	ld	a, (0x02, sp)
+;	main.c: 62: GPIO_ToggleBits(LED_PWR);
+	sub	a, #0x02
 	jrne	00105$
-;	main.c: 69: GPIO_ToggleBits(LED_PWR);
-	push	#0x01
-	push	#0x0f
-	push	#0x50
+	inc	a
+	ldw	x, #0x500f
 	call	_GPIO_ToggleBits
-	addw	sp, #3
-;	main.c: 70: SetTimer(3, TIMER_1_SEC);
-	push	#0x64
-	push	#0x00
-	push	#0x03
+;	main.c: 63: SetTimer(1, TIMER_1_SEC);
+	ldw	x, #0x0064
+	ld	a, #0x01
 	call	_SetTimer
-	addw	sp, #3
 00105$:
-;	main.c: 72: if (ev == pwrbtn_on) {
-	ld	a, (0x04, sp)
-	cp	a, #0x05
+;	main.c: 65: if (ev == pwrbtn_on) {
+	ld	a, (0x02, sp)
+	cp	a, #0x04
 	jreq	00200$
 	jp	00129$
 00200$:
-;	main.c: 73: GPIO_SetBits(LED_PWR);
-	push	#0x01
-	push	#0x0f
-	push	#0x50
+;	main.c: 66: GPIO_SetBits(LED_PWR);
+	ld	a, #0x01
+	ldw	x, #0x500f
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 75: GPIO_SetBits(ENABLE_5V);
-	push	#0x04
-	push	#0x05
-	push	#0x50
+;	main.c: 67: GPIO_SetBits(ENABLE_5V);
+	ld	a, #0x04
+	ldw	x, #0x5005
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 76: GPIO_SetBits(RESET_CPU);
-	push	#0x80
-	push	#0x05
-	push	#0x50
+;	main.c: 68: GPIO_SetBits(RESET_CPU);
+	ld	a, #0x80
+	ldw	x, #0x5005
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 77: SetTimer(1, TIMER_500_MS);
-	push	#0x32
-	push	#0x00
-	push	#0x01
+;	main.c: 69: SetTimer(0, TIMER_500_MS);
+	ldw	x, #0x0032
+	clr	a
 	call	_SetTimer
-	addw	sp, #3
-;	main.c: 78: SetTimer(0, TIMER_500_MS);
-	push	#0x32
-	push	#0x00
-	push	#0x00
+;	main.c: 71: SetTimer(2, TIMER_50_MS);
+	ldw	x, #0x0005
+	ld	a, #0x02
 	call	_SetTimer
-	addw	sp, #3
-;	main.c: 80: SetTimer(2, TIMER_100_MS);
-	push	#0x0a
-	push	#0x00
-	push	#0x02
-	call	_SetTimer
-	addw	sp, #3
-;	main.c: 81: SysCntrl.state = WAIT_PGOOD;
-	mov	_SysCntrl+10, #0x02
-;	main.c: 83: break;
+;	main.c: 72: SysCntrl.state = WAIT_PGOOD;
+	mov	_SysCntrl+8, #0x02
+;	main.c: 74: break;
 	jp	00129$
-;	main.c: 84: case WAIT_PGOOD:
+;	main.c: 75: case WAIT_PGOOD:
 00108$:
-;	main.c: 93: if( ev == timer_2){
+;	main.c: 77: if( ev == timer_2){
 	tnz	(0x01, sp)
 	jrne	00201$
 	jp	00129$
 00201$:
-;	main.c: 94: GPIO_ResetBits(LED_GOOD);
-	push	#0x08
-	push	#0x00
-	push	#0x50
+;	main.c: 78: GPIO_ResetBits(LED_GOOD);
+	ld	a, #0x08
+	ldw	x, #0x5000
 	call	_GPIO_ResetBits
-	addw	sp, #3
-;	main.c: 95: GPIO_SetBits(PG_SMARC);
-	push	#0x08
-	push	#0x05
-	push	#0x50
+;	main.c: 79: GPIO_SetBits(PG_SMARC);
+	ld	a, #0x08
+	ldw	x, #0x5005
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 96: SetTimer(2, TIMER_100_MS);
-	push	#0x0a
-	push	#0x00
-	push	#0x02
+;	main.c: 80: SetTimer(2, TIMER_50_MS);
+	ldw	x, #0x0005
+	ld	a, #0x02
 	call	_SetTimer
-	addw	sp, #3
-;	main.c: 97: SysCntrl.state = WAIT_CARRIER_ON;
-	mov	_SysCntrl+10, #0x03
-;	main.c: 106: break;
+;	main.c: 81: SysCntrl.state = WAIT_CARRIER_ON;
+	mov	_SysCntrl+8, #0x03
+;	main.c: 84: break;
 	jp	00129$
-;	main.c: 107: case WAIT_CARRIER_ON:
+;	main.c: 85: case WAIT_CARRIER_ON:
 00111$:
-;	main.c: 114: if( ev == timer_2){
+;	main.c: 87: if( ev == timer_2){
 	tnz	(0x01, sp)
 	jrne	00202$
 	jp	00129$
 00202$:
-;	main.c: 115: GPIO_SetBits(ENABLE_DCDC);
-	push	#0x02
-	push	#0x05
-	push	#0x50
+;	main.c: 88: GPIO_SetBits(ENABLE_DCDC);
+	ld	a, #0x02
+	ldw	x, #0x5005
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 116: SetTimer(2, TIMER_100_MS);
-	push	#0x0a
-	push	#0x00
-	push	#0x02
+;	main.c: 89: SetTimer(2, TIMER_50_MS);
+	ldw	x, #0x0005
+	ld	a, #0x02
 	call	_SetTimer
-	addw	sp, #3
-;	main.c: 117: SysCntrl.state = CPU_START;
-	mov	_SysCntrl+10, #0x05
-;	main.c: 119: break;
+;	main.c: 90: SysCntrl.state = CPU_START;
+	mov	_SysCntrl+8, #0x05
+;	main.c: 92: break;
 	jp	00129$
-;	main.c: 120: case CPU_START:
+;	main.c: 93: case CPU_START:
 00114$:
-;	main.c: 121: if (ev == timer_2){
+;	main.c: 94: if (ev == timer_2){
 	tnz	(0x01, sp)
 	jrne	00203$
 	jp	00129$
 00203$:
-;	main.c: 122: GPIO_SetBits(POWER_CPU);
-	push	#0x40
-	push	#0x05
-	push	#0x50
+;	main.c: 95: GPIO_SetBits(POWER_CPU);
+	ld	a, #0x40
+	ldw	x, #0x5005
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 123: GPIO_SetBits(LED_PWR);
-	push	#0x01
-	push	#0x0f
-	push	#0x50
+;	main.c: 96: GPIO_SetBits(LED_PWR);
+	ld	a, #0x01
+	ldw	x, #0x500f
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 124: SetTimer(2, TIMER_100_MS);
-	push	#0x0a
-	push	#0x00
-	push	#0x02
+;	main.c: 97: SetTimer(2, TIMER_50_MS);
+	ldw	x, #0x0005
+	ld	a, #0x02
 	call	_SetTimer
-	addw	sp, #3
-;	main.c: 125: SysCntrl.state = CPU_NO_RST;
-	mov	_SysCntrl+10, #0x06
-;	main.c: 127: break;
+;	main.c: 98: SysCntrl.state = CPU_NO_RST;
+	mov	_SysCntrl+8, #0x06
+;	main.c: 100: break;
 	jp	00129$
-;	main.c: 128: case CPU_NO_RST:
+;	main.c: 101: case CPU_NO_RST:
 00117$:
-;	main.c: 129: if (ev == timer_2){
+;	main.c: 102: if (ev == timer_2){
 	tnz	(0x01, sp)
-	jrne	00204$
-	jp	00129$
-00204$:
-;	main.c: 130: GPIO_ResetBits(RESET_CPU);
-	push	#0x80
-	push	#0x05
-	push	#0x50
+	jreq	00129$
+;	main.c: 103: GPIO_ResetBits(RESET_CPU);
+	ld	a, #0x80
+	ldw	x, #0x5005
 	call	_GPIO_ResetBits
-	addw	sp, #3
-;	main.c: 131: GPIO_SetBits(LED_PWR);
-	push	#0x01
-	push	#0x0f
-	push	#0x50
+;	main.c: 104: GPIO_SetBits(LED_PWR);
+	ld	a, #0x01
+	ldw	x, #0x500f
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 132: SetTimer(0, TIMER_1_SEC);
-	push	#0x64
-	push	#0x00
-	push	#0x00
+;	main.c: 105: SetTimer(0, TIMER_1_SEC);
+	ldw	x, #0x0064
+	clr	a
 	call	_SetTimer
-	addw	sp, #3
-;	main.c: 133: SysCntrl.state = WORK_STATE;
-	mov	_SysCntrl+10, #0x07
-;	main.c: 135: break;
+;	main.c: 106: SysCntrl.state = WORK_STATE;
+	mov	_SysCntrl+8, #0x07
+;	main.c: 108: break;
 	jra	00129$
-;	main.c: 136: case WORK_STATE:
+;	main.c: 109: case WORK_STATE:
 00120$:
-;	main.c: 137: if (ev == timer_0){
+;	main.c: 110: if (ev == timer_0){
 	tnz	a
 	jreq	00122$
-;	main.c: 138: GPIO_ToggleBits(LED_GOOD);
-	push	#0x08
-	push	#0x00
-	push	#0x50
+;	main.c: 111: GPIO_ToggleBits(LED_GOOD);
+	ld	a, #0x08
+	ldw	x, #0x5000
 	call	_GPIO_ToggleBits
-	addw	sp, #3
-;	main.c: 139: SetTimer(0, TIMER_1_SEC);
-	push	#0x64
-	push	#0x00
-	push	#0x00
+;	main.c: 112: SetTimer(0, TIMER_1_SEC);
+	ldw	x, #0x0064
+	clr	a
 	call	_SetTimer
-	addw	sp, #3
 00122$:
-;	main.c: 142: if (ev == pwrbtn_off){
-	ld	a, (0x04, sp)
-	cp	a, #0x06
+;	main.c: 115: if (ev == pwrbtn_off){
+	ld	a, (0x02, sp)
+	cp	a, #0x05
 	jrne	00129$
-;	main.c: 143: GPIO_ResetBits(POWER_CPU);
-	push	#0x40
-	push	#0x05
-	push	#0x50
+;	main.c: 116: GPIO_ResetBits(POWER_CPU);
+	ld	a, #0x40
+	ldw	x, #0x5005
 	call	_GPIO_ResetBits
-	addw	sp, #3
-;	main.c: 144: GPIO_ResetBits(ENABLE_DCDC);
-	push	#0x02
-	push	#0x05
-	push	#0x50
+;	main.c: 117: GPIO_ResetBits(ENABLE_DCDC);
+	ld	a, #0x02
+	ldw	x, #0x5005
 	call	_GPIO_ResetBits
-	addw	sp, #3
-;	main.c: 145: GPIO_ResetBits(ENABLE_5V);
-	push	#0x04
-	push	#0x05
-	push	#0x50
+;	main.c: 118: GPIO_ResetBits(ENABLE_5V);
+	ld	a, #0x04
+	ldw	x, #0x5005
 	call	_GPIO_ResetBits
-	addw	sp, #3
-;	main.c: 146: GPIO_ResetBits(PG_SMARC);
-	push	#0x08
-	push	#0x05
-	push	#0x50
+;	main.c: 119: GPIO_ResetBits(PG_SMARC);
+	ld	a, #0x08
+	ldw	x, #0x5005
 	call	_GPIO_ResetBits
-	addw	sp, #3
-;	main.c: 147: GPIO_SetBits(LED_GOOD);
-	push	#0x08
-	push	#0x00
-	push	#0x50
+;	main.c: 120: GPIO_SetBits(LED_GOOD);
+	ld	a, #0x08
+	ldw	x, #0x5000
 	call	_GPIO_SetBits
-	addw	sp, #3
-;	main.c: 148: SysCntrl.state = WAIT_PWR_BTN;
-	mov	_SysCntrl+10, #0x00
-;	main.c: 149: tick(start);
-	push	#0x00
-	call	_tick
-	pop	a
-;	main.c: 151: break;
-	jra	00129$
-;	main.c: 152: case PWR_ERROR:
+;	main.c: 121: SysCntrl.state = WAIT_PWR_BTN;
+	mov	_SysCntrl+8, #0x00
+;	main.c: 122: tick(start);
+	clr	a
+	addw	sp, #2
+;	main.c: 124: break;
+	jp	_tick
+;	main.c: 125: case PWR_ERROR:
 00125$:
-;	main.c: 153: if ( ev == timer_0){
+;	main.c: 126: if ( ev == timer_0){
 	tnz	a
 	jreq	00129$
-;	main.c: 154: GPIO_ToggleBits(LED_PWR);
-	push	#0x01
-	push	#0x0f
-	push	#0x50
+;	main.c: 127: GPIO_ToggleBits(LED_PWR);
+	ld	a, #0x01
+	ldw	x, #0x500f
 	call	_GPIO_ToggleBits
-	addw	sp, #3
-;	main.c: 155: SetTimer(0, TIMER_100_MS);
-	push	#0x0a
-	push	#0x00
-	push	#0x00
-	call	_SetTimer
-	addw	sp, #3
-;	main.c: 158: }
+;	main.c: 128: SetTimer(0, TIMER_100_MS);
+	ldw	x, #0x000a
+	clr	a
+	addw	sp, #2
+	jp	_SetTimer
+;	main.c: 131: }
 00129$:
-;	main.c: 159: }
-	pop	a
+;	main.c: 132: }
+	addw	sp, #2
 	ret
-;	main.c: 161: void ReadInputGpio() {
+;	main.c: 134: void ReadInputGpio() {
 ;	-----------------------------------------
 ;	 function ReadInputGpio
 ;	-----------------------------------------
 _ReadInputGpio:
-	sub	sp, #6
-;	main.c: 163: SysCntrl.btn_state = GPIO_ReadInputDataBit(PWR_BTN);
-	ldw	x, #(_SysCntrl + 0)+12
-	ldw	(0x01, sp), x
-	push	#0x04
-	push	#0x00
-	push	#0x50
+	sub	sp, #2
+;	main.c: 136: SysCntrl.btn_state = GPIO_ReadInputDataBit(PWR_BTN);
+	ld	a, #0x04
+	ldw	x, #0x5000
 	call	_GPIO_ReadInputDataBit
-	addw	sp, #3
-	ld	(0x03, sp), a
-	ldw	x, (0x01, sp)
-	ld	a, (0x03, sp)
+	ld	(0x02, sp), a
+	ldw	x, #(_SysCntrl+10)
+	ld	a, (0x02, sp)
 	ld	(x), a
-;	main.c: 164: SysCntrl.btn_change_time = SysCntrl.Timer;
-	ldw	x, #(_SysCntrl + 0)+15
-	ldw	(0x04, sp), x
-	ldw	x, _SysCntrl+8
-	ldw	y, (0x04, sp)
-	ldw	(y), x
-;	main.c: 166: if (SysCntrl.btn_state != SysCntrl.btn_state_prev){
-	ldw	x, (0x01, sp)
+;	main.c: 137: SysCntrl.btn_change_time = SysCntrl.Timer;
+	ldw	x, _SysCntrl+6
+	ldw	_SysCntrl+13, x
+;	main.c: 139: if (SysCntrl.btn_state != SysCntrl.btn_state_prev){
+	ld	a, _SysCntrl+10
+	ld	yl, a
+	ldw	x, #(_SysCntrl+0)+9
 	ld	a, (x)
-	ld	(0x06, sp), a
-	ldw	x, #(_SysCntrl + 0)+11
-	ld	a, (x)
-;	main.c: 168: SysCntrl.btn_last_change = SysCntrl.btn_change_time;
-	ldw	y, #(_SysCntrl + 0)+13
-;	main.c: 166: if (SysCntrl.btn_state != SysCntrl.btn_state_prev){
-	cp	a, (0x03, sp)
+;	main.c: 141: SysCntrl.btn_last_change = SysCntrl.btn_change_time;
+;	main.c: 139: if (SysCntrl.btn_state != SysCntrl.btn_state_prev){
+	cp	a, (0x02, sp)
 	jreq	00102$
-;	main.c: 167: SysCntrl.btn_state_prev = SysCntrl.btn_state;
-	ld	a, (0x06, sp)
+;	main.c: 140: SysCntrl.btn_state_prev = SysCntrl.btn_state;
+	ld	a, yl
 	ld	(x), a
-;	main.c: 168: SysCntrl.btn_last_change = SysCntrl.btn_change_time;
-	ldw	x, (0x04, sp)
-	ldw	x, (x)
-	ldw	(y), x
+;	main.c: 141: SysCntrl.btn_last_change = SysCntrl.btn_change_time;
+	ldw	x, _SysCntrl+13
+	ldw	_SysCntrl+11, x
 00102$:
-	ldw	x, (0x04, sp)
-	ldw	x, (x)
-;	main.c: 171: if (SysCntrl.btn_change_time - SysCntrl.btn_last_change >= TIMER_2_SEC){
-	ldw	y, (y)
-	ldw	(0x05, sp), y
-	subw	x, (0x05, sp)
+	ldw	y, _SysCntrl+13
+;	main.c: 144: if (SysCntrl.btn_change_time - SysCntrl.btn_last_change >= TIMER_2_SEC){
+	ldw	x, _SysCntrl+11
+	ldw	(0x01, sp), x
+	ldw	x, y
+	subw	x, (0x01, sp)
 	cpw	x, #0x00c8
 	jrc	00110$
-;	main.c: 172: if (SysCntrl.btn_state == RESET){
-	ldw	x, (0x01, sp)
-	ld	a, (x)
+;	main.c: 145: if (SysCntrl.btn_state == RESET){
+	ld	a, _SysCntrl+10
 	jrne	00111$
-;	main.c: 173: tick(pwrbtn_off);
-	push	#0x06
+;	main.c: 146: tick(pwrbtn_off);
+	ld	a, #0x05
 	call	_tick
-	pop	a
 	jra	00111$
 00110$:
-;	main.c: 177: if (SysCntrl.btn_change_time - SysCntrl.btn_last_change >= TIMER_50_MS)
+;	main.c: 150: if (SysCntrl.btn_change_time - SysCntrl.btn_last_change >= TIMER_50_MS)
 	cpw	x, #0x0005
 	jrc	00111$
-;	main.c: 179: if (SysCntrl.btn_state == RESET){
-	ldw	x, (0x01, sp)
-	ld	a, (x)
+;	main.c: 152: if (SysCntrl.btn_state == RESET){
+	ld	a, _SysCntrl+10
 	jrne	00111$
-;	main.c: 180: tick(pwrbtn_on);
-	push	#0x05
+;	main.c: 153: tick(pwrbtn_on);
+	ld	a, #0x04
 	call	_tick
-	pop	a
 00111$:
-;	main.c: 186: if( GPIO_ReadInputDataBit(PG_5V) ){
-	push	#0x10
-	push	#0x05
-	push	#0x50
+;	main.c: 159: if( GPIO_ReadInputDataBit(PG_5V) ){
+	ld	a, #0x10
+	ldw	x, #0x5005
 	call	_GPIO_ReadInputDataBit
-	addw	sp, #3
 	tnz	a
 	jreq	00113$
-;	main.c: 187: tick(pgood_5v);
-	push	#0x07
+;	main.c: 160: tick(pgood_5v);
+	ld	a, #0x06
 	call	_tick
-	pop	a
 00113$:
-;	main.c: 190: if( GPIO_ReadInputDataBit(CARRIER_PWR_ON) ){
-	push	#0x20
-	push	#0x05
-	push	#0x50
+;	main.c: 163: if( GPIO_ReadInputDataBit(CARRIER_PWR_ON) ){
+	ld	a, #0x20
+	ldw	x, #0x5005
 	call	_GPIO_ReadInputDataBit
-	addw	sp, #3
 	tnz	a
 	jreq	00116$
-;	main.c: 191: tick(carrier);
-	push	#0x08
-	call	_tick
-	pop	a
+;	main.c: 164: tick(carrier);
+	ld	a, #0x07
+	addw	sp, #2
+	jp	_tick
 00116$:
-;	main.c: 214: }
-	addw	sp, #6
+;	main.c: 167: }
+	addw	sp, #2
 	ret
-;	main.c: 217: void TimerMatch()
+;	main.c: 170: void TimerMatch()
 ;	-----------------------------------------
 ;	 function TimerMatch
 ;	-----------------------------------------
 _TimerMatch:
-	sub	sp, #2
-;	main.c: 219: if (!bMainTimer) {
-	tnz	_bMainTimer+0
-;	main.c: 220: return;
-	jreq	00119$
-;	main.c: 222: bMainTimer = 0;
+;	main.c: 172: if (!bMainTimer) {
+	ld	a, _bMainTimer+0
+	jrne	00102$
+;	main.c: 173: return;
+	ret
+00102$:
+;	main.c: 175: bMainTimer = 0;
 	clr	_bMainTimer+0
-;	main.c: 223: SysCntrl.Timer++;
-	ldw	y, #(_SysCntrl + 0)+8
-	ldw	x, y
-	ldw	x, (x)
+;	main.c: 176: SysCntrl.Timer++;
+	ldw	x, _SysCntrl+6
 	incw	x
-	ldw	(y), x
-;	main.c: 225: if (SysCntrl.Timer_0) {
+	ldw	_SysCntrl+6, x
+;	main.c: 179: if (SysCntrl.Timer_0) { 
 	ldw	x, _SysCntrl+0
 	tnzw	x
 	jreq	00106$
-;	main.c: 226: SysCntrl.Timer_0--;
+;	main.c: 180: SysCntrl.Timer_0--;
 	decw	x
 	ldw	_SysCntrl+0, x
-;	main.c: 227: if (!SysCntrl.Timer_0) {
+;	main.c: 181: if (!SysCntrl.Timer_0) {
 	tnzw	x
 	jrne	00106$
-;	main.c: 228: tick(timer_0);
-	push	#0x01
+;	main.c: 182: tick(timer_0);
+	ld	a, #0x01
 	call	_tick
-	pop	a
 00106$:
-;	main.c: 231: if (SysCntrl.Timer_1) {
-	ldw	x, #(_SysCntrl + 0)+2
-	ldw	(0x01, sp), x
-	ldw	x, (x)
+;	main.c: 187: if (SysCntrl.Timer_1) { 
+	ldw	x, _SysCntrl+2
+	tnzw	x
 	jreq	00110$
-;	main.c: 232: SysCntrl.Timer_1--;
+;	main.c: 188: SysCntrl.Timer_1--;
 	decw	x
-	ldw	y, (0x01, sp)
-	ldw	(y), x
-;	main.c: 233: if (!SysCntrl.Timer_1) {
+	ldw	_SysCntrl+2, x
+;	main.c: 189: if (!SysCntrl.Timer_1) {
 	tnzw	x
 	jrne	00110$
-;	main.c: 234: tick(timer_1);
-	push	#0x02
+;	main.c: 190: tick(timer_1);
+	ld	a, #0x02
 	call	_tick
-	pop	a
 00110$:
-;	main.c: 237: if (SysCntrl.Timer_2) {
-	ldw	y, #(_SysCntrl + 0)+4
-	ldw	x, y
-	ldw	x, (x)
-	jreq	00114$
-;	main.c: 238: SysCntrl.Timer_2--;
-	decw	x
-	ldw	(y), x
-;	main.c: 239: if (!SysCntrl.Timer_2) {
+;	main.c: 195: if (SysCntrl.Timer_2) {
+	ldw	x, _SysCntrl+4
 	tnzw	x
-	jrne	00114$
-;	main.c: 240: tick(timer_2);
-	push	#0x03
-	call	_tick
-	pop	a
-00114$:
-;	main.c: 243: if (SysCntrl.Timer_3) {
-	ldw	y, #(_SysCntrl + 0)+6
-	ldw	x, y
-	ldw	x, (x)
-	jreq	00119$
-;	main.c: 244: SysCntrl.Timer_3--;
-	decw	x
-	ldw	(0x01, sp), x
-	ldw	x, y
-	ldw	y, (0x01, sp)
-	ldw	(x), y
-;	main.c: 245: if (!SysCntrl.Timer_3) {
-	ldw	x, (0x01, sp)
-	jrne	00119$
-;	main.c: 246: tick(timer_3);
-	push	#0x04
-	call	_tick
-	pop	a
-00119$:
-;	main.c: 249: }
-	addw	sp, #2
+	jrne	00157$
 	ret
-;	main.c: 261: INTERRUPT_HANDLER(IRQ_Handler_TIM4, 25)
+00157$:
+;	main.c: 196: SysCntrl.Timer_2--;
+	decw	x
+	ldw	_SysCntrl+4, x
+;	main.c: 197: if (!SysCntrl.Timer_2) {
+	tnzw	x
+	jreq	00158$
+	ret
+00158$:
+;	main.c: 198: tick(timer_2);
+	ld	a, #0x03
+;	main.c: 201: }
+	jp	_tick
+;	main.c: 205: INTERRUPT_HANDLER(IRQ_Handler_TIM4, 25)
 ;	-----------------------------------------
 ;	 function IRQ_Handler_TIM4
 ;	-----------------------------------------
 _IRQ_Handler_TIM4:
 	clr	a
 	div	x, a
-;	main.c: 263: bMainTimer = 1;
+;	main.c: 207: bMainTimer = 1;
 	mov	_bMainTimer+0, #0x01
-;	main.c: 265: TIM4_ClearITPendingBit(TIM4_IT_Update);
-	push	#0x01
+;	main.c: 208: TIM4_ClearITPendingBit(TIM4_IT_Update);
+	ld	a, #0x01
 	call	_TIM4_ClearITPendingBit
-	pop	a
-;	main.c: 266: }
+;	main.c: 209: }
 	iret
-;	main.c: 268: int main( void )
+;	main.c: 211: int main( void )
 ;	-----------------------------------------
 ;	 function main
 ;	-----------------------------------------
 _main:
-;	main.c: 270: disableInterrupts();
+;	main.c: 213: disableInterrupts();
 	sim;	
-;	main.c: 272: GPIO_DeInit(GPIOA);
-	push	#0x00
-	push	#0x50
+;	main.c: 215: GPIO_DeInit(GPIOA);
+	ldw	x, #0x5000
 	call	_GPIO_DeInit
-	addw	sp, #2
-;	main.c: 273: GPIO_DeInit(GPIOB);
-	push	#0x05
-	push	#0x50
+;	main.c: 216: GPIO_DeInit(GPIOB);
+	ldw	x, #0x5005
 	call	_GPIO_DeInit
-	addw	sp, #2
-;	main.c: 274: GPIO_DeInit(GPIOC);
-	push	#0x0a
-	push	#0x50
+;	main.c: 217: GPIO_DeInit(GPIOC);
+	ldw	x, #0x500a
 	call	_GPIO_DeInit
-	addw	sp, #2
-;	main.c: 275: GPIO_DeInit(GPIOD);
-	push	#0x0f
-	push	#0x50
+;	main.c: 218: GPIO_DeInit(GPIOD);
+	ldw	x, #0x500f
 	call	_GPIO_DeInit
-	addw	sp, #2
-;	main.c: 277: GPIO_Init(LED_GOOD, GPIO_Mode_Out_PP_High_Fast);
+;	main.c: 220: GPIO_Init(LED_GOOD, GPIO_Mode_Out_PP_High_Fast);
 	push	#0xf0
-	push	#0x08
-	push	#0x00
-	push	#0x50
+	ld	a, #0x08
+	ldw	x, #0x5000
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 278: GPIO_Init(LED_PWR, GPIO_Mode_Out_PP_Low_Fast);
+;	main.c: 221: GPIO_Init(LED_PWR, GPIO_Mode_Out_PP_Low_Fast);
 	push	#0xe0
-	push	#0x01
-	push	#0x0f
-	push	#0x50
+	ld	a, #0x01
+	ldw	x, #0x500f
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 279: GPIO_Init(ENABLE_DCDC, GPIO_Mode_Out_PP_Low_Fast);
+;	main.c: 222: GPIO_Init(ENABLE_DCDC, GPIO_Mode_Out_PP_Low_Fast);
 	push	#0xe0
-	push	#0x02
-	push	#0x05
-	push	#0x50
+	ld	a, #0x02
+	ldw	x, #0x5005
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 280: GPIO_Init(ENABLE_5V, GPIO_Mode_Out_PP_Low_Fast);
+;	main.c: 223: GPIO_Init(ENABLE_5V, GPIO_Mode_Out_PP_Low_Fast);
 	push	#0xe0
-	push	#0x04
-	push	#0x05
-	push	#0x50
+	ld	a, #0x04
+	ldw	x, #0x5005
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 281: GPIO_Init(PG_SMARC, GPIO_Mode_Out_PP_Low_Fast);
+;	main.c: 224: GPIO_Init(PG_SMARC, GPIO_Mode_Out_PP_Low_Fast);
 	push	#0xe0
-	push	#0x08
-	push	#0x05
-	push	#0x50
+	ld	a, #0x08
+	ldw	x, #0x5005
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 282: GPIO_Init(POWER_CPU, GPIO_Mode_Out_PP_Low_Fast);
+;	main.c: 225: GPIO_Init(POWER_CPU, GPIO_Mode_Out_PP_Low_Fast);
 	push	#0xe0
+	ld	a, #0x40
+	ldw	x, #0x5005
+	call	_GPIO_Init
+;	main.c: 226: GPIO_Init(RESET_CPU, GPIO_Mode_Out_PP_Low_Fast);
+	push	#0xe0
+	ld	a, #0x80
+	ldw	x, #0x5005
+	call	_GPIO_Init
+;	main.c: 227: GPIO_Init(WDOG_OUT, GPIO_Mode_Out_PP_Low_Fast);
+	push	#0xe0
+	ld	a, #0x10
+	ldw	x, #0x500a
+	call	_GPIO_Init
+;	main.c: 229: GPIO_Init(PWR_BTN, GPIO_Mode_In_PU_No_IT);
 	push	#0x40
-	push	#0x05
-	push	#0x50
+	ld	a, #0x04
+	ldw	x, #0x5000
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 283: GPIO_Init(RESET_CPU, GPIO_Mode_Out_PP_Low_Fast);
-	push	#0xe0
-	push	#0x80
-	push	#0x05
-	push	#0x50
-	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 284: GPIO_Init(WDOG_OUT, GPIO_Mode_Out_PP_Low_Fast);
-	push	#0xe0
-	push	#0x10
-	push	#0x0a
-	push	#0x50
-	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 286: GPIO_Init(PWR_BTN, GPIO_Mode_In_PU_No_IT);
+;	main.c: 230: GPIO_Init(PG_5V, GPIO_Mode_In_PU_No_IT);
 	push	#0x40
-	push	#0x04
-	push	#0x00
-	push	#0x50
+	ld	a, #0x10
+	ldw	x, #0x5005
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 287: GPIO_Init(PG_5V, GPIO_Mode_In_PU_No_IT);
+;	main.c: 231: GPIO_Init(CARRIER_PWR_ON, GPIO_Mode_In_PU_No_IT);
 	push	#0x40
-	push	#0x10
-	push	#0x05
-	push	#0x50
+	ld	a, #0x20
+	ldw	x, #0x5005
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 288: GPIO_Init(CARRIER_PWR_ON, GPIO_Mode_In_PU_No_IT);
+;	main.c: 232: GPIO_Init(WDOG_IN, GPIO_Mode_In_PU_No_IT);
 	push	#0x40
-	push	#0x20
-	push	#0x05
-	push	#0x50
+	ld	a, #0x01
+	ldw	x, #0x5005
 	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 289: GPIO_Init(WDOG_IN, GPIO_Mode_In_PU_No_IT);
-	push	#0x40
-	push	#0x01
-	push	#0x05
-	push	#0x50
-	call	_GPIO_Init
-	addw	sp, #4
-;	main.c: 293: CLK_DeInit();
+;	main.c: 236: CLK_DeInit();
 	call	_CLK_DeInit
-;	main.c: 294: CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
-	push	#0x00
+;	main.c: 237: CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
+	clr	a
 	call	_CLK_SYSCLKDivConfig
-	pop	a
-;	main.c: 295: CLK_PeripheralClockConfig(CLK_Peripheral_TIM4, ENABLE);
+;	main.c: 238: CLK_PeripheralClockConfig(CLK_Peripheral_TIM4, ENABLE);
 	push	#0x01
-	push	#0x02
+	ld	a, #0x02
 	call	_CLK_PeripheralClockConfig
-	addw	sp, #2
-;	main.c: 296: CLK_PeripheralClockConfig(CLK_Peripheral_USART1, ENABLE);
+;	main.c: 239: CLK_PeripheralClockConfig(CLK_Peripheral_USART1, ENABLE);
 	push	#0x01
-	push	#0x05
+	ld	a, #0x05
 	call	_CLK_PeripheralClockConfig
-	addw	sp, #2
-;	main.c: 298: TIM4_DeInit();
+;	main.c: 241: TIM4_DeInit();
 	call	_TIM4_DeInit
-;	main.c: 304: TIM4_Cmd(DISABLE); 
-	push	#0x00
+;	main.c: 243: TIM4_Cmd(DISABLE); 
+	clr	a
 	call	_TIM4_Cmd
-	pop	a
-;	main.c: 305: TIM4_TimeBaseInit(TIM4_Prescaler_1024, 156);
+;	main.c: 244: TIM4_TimeBaseInit(TIM4_Prescaler_1024, 156);
 	push	#0x9c
-	push	#0x0a
+	ld	a, #0x0a
 	call	_TIM4_TimeBaseInit
-	addw	sp, #2
-;	main.c: 306: TIM4_ClearFlag(TIM4_FLAG_Update);
-	push	#0x01
+;	main.c: 245: TIM4_ClearFlag(TIM4_FLAG_Update);
+	ld	a, #0x01
 	call	_TIM4_ClearFlag
-	pop	a
-;	main.c: 307: TIM4_ITConfig(TIM4_IT_Update, ENABLE);
+;	main.c: 246: TIM4_ITConfig(TIM4_IT_Update, ENABLE);
 	push	#0x01
-	push	#0x01
+	ld	a, #0x01
 	call	_TIM4_ITConfig
-	addw	sp, #2
-;	main.c: 308: TIM4_Cmd(ENABLE);       // let's go
-	push	#0x01
+;	main.c: 247: TIM4_Cmd(ENABLE);       // let's go
+	ld	a, #0x01
 	call	_TIM4_Cmd
-	pop	a
-;	main.c: 309: enableInterrupts();
+;	main.c: 248: enableInterrupts();
 	rim;	
-;	main.c: 312: bMainTimer = 0;
+;	main.c: 251: bMainTimer = 0;
 	clr	_bMainTimer+0
-;	main.c: 314: SysCntrl.btn_state = SET;
-	ldw	x, #(_SysCntrl + 0)+12
-	ld	a, #0x01
-	ld	(x), a
-;	main.c: 315: SysCntrl.btn_state_prev = SET;
-	ldw	x, #(_SysCntrl + 0)+11
-	ld	a, #0x01
-	ld	(x), a
-;	main.c: 316: SysCntrl.btn_change_time = 0;
-	ldw	x, #(_SysCntrl + 0)+15
+;	main.c: 252: SysCntrl.btn_state = SET;
+	mov	_SysCntrl+10, #0x01
+;	main.c: 253: SysCntrl.btn_state_prev = SET;
+	mov	_SysCntrl+9, #0x01
+;	main.c: 254: SysCntrl.btn_change_time = 0;
+	ldw	x, #(_SysCntrl+13)
 	clr	(0x1, x)
 	clr	(x)
-;	main.c: 317: SysCntrl.btn_last_change = 0;
-	ldw	x, #(_SysCntrl + 0)+13
+;	main.c: 255: SysCntrl.btn_last_change = 0;
+	ldw	x, #(_SysCntrl+11)
 	clr	(0x1, x)
 	clr	(x)
-;	main.c: 319: tick(start);
-	push	#0x00
+;	main.c: 257: tick(start);
+	clr	a
 	call	_tick
-	pop	a
-;	main.c: 320: while (1) {
+;	main.c: 258: while (1) {
 00102$:
-;	main.c: 321: ReadInputGpio();
+;	main.c: 259: ReadInputGpio();
 	call	_ReadInputGpio
-;	main.c: 322: TimerMatch();
+;	main.c: 260: TimerMatch();
 	call	_TimerMatch
 	jra	00102$
-;	main.c: 326: }
+;	main.c: 264: }
 	ret
 	.area CODE
 	.area CONST

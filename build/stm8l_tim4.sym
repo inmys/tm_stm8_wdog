@@ -8,28 +8,28 @@ Symbol Table
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000001 L
   9 _TIM4_ARRPreloadConfig                                         00008D GR
-  9 _TIM4_ClearFlag                                                0000FB GR
-  9 _TIM4_ClearITPendingBit                                        00011D GR
-  9 _TIM4_Cmd                                                      0000B6 GR
-  9 _TIM4_DMACmd                                                   000124 GR
+  9 _TIM4_ClearFlag                                                00010F GR
+  9 _TIM4_ClearITPendingBit                                        000132 GR
+  9 _TIM4_Cmd                                                      0000BB GR
+  9 _TIM4_DMACmd                                                   000137 GR
   9 _TIM4_DeInit                                                   000000 GR
-  9 _TIM4_GenerateEvent                                            0000E6 GR
-  9 _TIM4_GetCounter                                               00005C GR
-  9 _TIM4_GetFlagStatus                                            0000EF GR
-  9 _TIM4_GetITStatus                                              000102 GR
-  9 _TIM4_GetPrescaler                                             000060 GR
-  9 _TIM4_ITConfig                                                 0000C9 GR
-  9 _TIM4_InternalClockConfig                                      000141 GR
-  9 _TIM4_PrescalerConfig                                          000032 GR
-  9 _TIM4_SelectInputTrigger                                       00014A GR
-  9 _TIM4_SelectMasterSlaveMode                                    00016B GR
-  9 _TIM4_SelectOnePulseMode                                       0000A0 GR
-  9 _TIM4_SelectOutputTrigger                                      000155 GR
-  9 _TIM4_SelectSlaveMode                                          000160 GR
-  9 _TIM4_SetAutoreload                                            000055 GR
-  9 _TIM4_SetCounter                                               00004E GR
+  9 _TIM4_GenerateEvent                                            0000F1 GR
+  9 _TIM4_GetCounter                                               000057 GR
+  9 _TIM4_GetFlagStatus                                            0000FE GR
+  9 _TIM4_GetITStatus                                              000114 GR
+  9 _TIM4_GetPrescaler                                             00005B GR
+  9 _TIM4_ITConfig                                                 0000D3 GR
+  9 _TIM4_InternalClockConfig                                      000155 GR
+  9 _TIM4_PrescalerConfig                                          000033 GR
+  9 _TIM4_SelectInputTrigger                                       00015E GR
+  9 _TIM4_SelectMasterSlaveMode                                    00018B GR
+  9 _TIM4_SelectOnePulseMode                                       0000A5 GR
+  9 _TIM4_SelectOutputTrigger                                      00016D GR
+  9 _TIM4_SelectSlaveMode                                          00017C GR
+  9 _TIM4_SetAutoreload                                            000053 GR
+  9 _TIM4_SetCounter                                               00004F GR
   9 _TIM4_TimeBaseInit                                             000021 GR
-  9 _TIM4_UpdateDisableConfig                                      000064 GR
+  9 _TIM4_UpdateDisableConfig                                      00005F GR
   9 _TIM4_UpdateRequestConfig                                      000077 GR
 
 
@@ -47,6 +47,6 @@ Area Table
    6 GSFINAL                                    size      0   flags    0
    7 CONST                                      size      0   flags    0
    8 INITIALIZER                                size      0   flags    0
-   9 CODE                                       size    17E   flags    0
+   9 CODE                                       size    1A3   flags    0
    A CABS                                       size      0   flags    8
 

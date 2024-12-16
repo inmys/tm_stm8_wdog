@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (Linux)
+; Version 4.2.0 #13081 (Linux)
 ;--------------------------------------------------------
 	.module stm8l_gpio
 	.optsdcc -mstm8
@@ -62,8 +62,7 @@
 ;	-----------------------------------------
 _GPIO_DeInit:
 ;	libs/stm8l_gpio.c: 5: GPIOx->CR2 = GPIO_CR2_RESET_VALUE; /* Reset Control Register 2 */
-	ldw	y, (0x03, sp)
-	ldw	x, y
+	ldw	y, x
 	clr	(0x0004, x)
 ;	libs/stm8l_gpio.c: 6: GPIOx->ODR = GPIO_ODR_RESET_VALUE; /* Reset Output Data Register */
 	clr	(y)
@@ -82,15 +81,16 @@ _GPIO_DeInit:
 ;	 function GPIO_Init
 ;	-----------------------------------------
 _GPIO_Init:
-	sub	sp, #5
+	sub	sp, #6
+	exgw	x, y
+	ld	(0x06, sp), a
 ;	libs/stm8l_gpio.c: 22: GPIOx->CR2 &= (uint8_t)(~(GPIO_Pin));
-	ldw	y, (0x08, sp)
 	ldw	x, y
 	addw	x, #0x0004
 	ldw	(0x01, sp), x
 	ld	a, (x)
 	push	a
-	ld	a, (0x0b, sp)
+	ld	a, (0x07, sp)
 	cpl	a
 	ld	(0x04, sp), a
 	pop	a
@@ -103,18 +103,18 @@ _GPIO_Init:
 	incw	x
 	ldw	(0x04, sp), x
 ;	libs/stm8l_gpio.c: 28: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x80) != (uint8_t)0x00) /* Output mode */
-	tnz	(0x0b, sp)
+	tnz	(0x09, sp)
 	jrpl	00105$
 ;	libs/stm8l_gpio.c: 32: GPIOx->ODR |= GPIO_Pin;
 	ld	a, (y)
 ;	libs/stm8l_gpio.c: 30: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x10) != (uint8_t)0x00) /* High level */
 	push	a
-	ld	a, (0x0c, sp)
+	ld	a, (0x0a, sp)
 	bcp	a, #0x10
 	pop	a
 	jreq	00102$
 ;	libs/stm8l_gpio.c: 32: GPIOx->ODR |= GPIO_Pin;
-	or	a, (0x0a, sp)
+	or	a, (0x06, sp)
 	ld	(y), a
 	jra	00103$
 00102$:
@@ -125,7 +125,7 @@ _GPIO_Init:
 ;	libs/stm8l_gpio.c: 38: GPIOx->DDR |= GPIO_Pin;
 	ldw	x, (0x04, sp)
 	ld	a, (x)
-	or	a, (0x0a, sp)
+	or	a, (0x06, sp)
 	ldw	x, (0x04, sp)
 	ld	(x), a
 	jra	00106$
@@ -143,12 +143,12 @@ _GPIO_Init:
 	ld	a, (x)
 ;	libs/stm8l_gpio.c: 49: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x40) != (uint8_t)0x00) /* Pull-Up or Push-Pull */
 	push	a
-	ld	a, (0x0c, sp)
+	ld	a, (0x0a, sp)
 	bcp	a, #0x40
 	pop	a
 	jreq	00108$
 ;	libs/stm8l_gpio.c: 51: GPIOx->CR1 |= GPIO_Pin;
-	or	a, (0x0a, sp)
+	or	a, (0x06, sp)
 	ld	(x), a
 	jra	00109$
 00108$:
@@ -161,12 +161,12 @@ _GPIO_Init:
 	ld	a, (x)
 ;	libs/stm8l_gpio.c: 61: if ((((uint8_t)(GPIO_Mode)) & (uint8_t)0x20) != (uint8_t)0x00) /* Interrupt or Slow slope */
 	push	a
-	ld	a, (0x0c, sp)
+	ld	a, (0x0a, sp)
 	bcp	a, #0x20
 	pop	a
 	jreq	00111$
 ;	libs/stm8l_gpio.c: 63: GPIOx->CR2 |= GPIO_Pin;
-	or	a, (0x0a, sp)
+	or	a, (0x06, sp)
 	ldw	x, (0x01, sp)
 	ld	(x), a
 	jra	00113$
@@ -177,8 +177,10 @@ _GPIO_Init:
 	ld	(x), a
 00113$:
 ;	libs/stm8l_gpio.c: 69: }
-	addw	sp, #5
-	ret
+	addw	sp, #6
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_gpio.c: 71: void GPIO_ExternalPullUpConfig(GPIO_TypeDef* GPIOx, uint8_t GPIO_Pin, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function GPIO_ExternalPullUpConfig
@@ -186,37 +188,35 @@ _GPIO_Init:
 _GPIO_ExternalPullUpConfig:
 	push	a
 ;	libs/stm8l_gpio.c: 79: GPIOx->CR1 |= GPIO_Pin;
-	ldw	x, (0x04, sp)
 	addw	x, #0x0003
+	push	a
 	ld	a, (x)
+	ld	(0x02, sp), a
+	pop	a
 ;	libs/stm8l_gpio.c: 77: if (NewState != DISABLE) /* External Pull-Up Set*/
-	tnz	(0x07, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_gpio.c: 79: GPIOx->CR1 |= GPIO_Pin;
-	or	a, (0x06, sp)
+	or	a, (0x01, sp)
 	ld	(x), a
 	jra	00104$
 00102$:
 ;	libs/stm8l_gpio.c: 82: GPIOx->CR1 &= (uint8_t)(~(GPIO_Pin));
-	push	a
-	ld	a, (0x07, sp)
 	cpl	a
-	ld	(0x02, sp), a
-	pop	a
 	and	a, (0x01, sp)
 	ld	(x), a
 00104$:
 ;	libs/stm8l_gpio.c: 84: }
 	pop	a
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_gpio.c: 87: void GPIO_Write(GPIO_TypeDef* GPIOx, uint8_t GPIO_PortVal)
 ;	-----------------------------------------
 ;	 function GPIO_Write
 ;	-----------------------------------------
 _GPIO_Write:
 ;	libs/stm8l_gpio.c: 89: GPIOx->ODR = GPIO_PortVal;
-	ldw	x, (0x03, sp)
-	ld	a, (0x05, sp)
 	ld	(x), a
 ;	libs/stm8l_gpio.c: 90: }
 	ret
@@ -227,39 +227,41 @@ _GPIO_Write:
 _GPIO_WriteBit:
 	push	a
 ;	libs/stm8l_gpio.c: 100: GPIOx->ODR |= GPIO_Pin;
-	ldw	x, (0x04, sp)
+	push	a
 	ld	a, (x)
+	ld	(0x02, sp), a
+	pop	a
 ;	libs/stm8l_gpio.c: 98: if (GPIO_BitVal != RESET)
-	tnz	(0x07, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_gpio.c: 100: GPIOx->ODR |= GPIO_Pin;
-	or	a, (0x06, sp)
+	or	a, (0x01, sp)
 	ld	(x), a
 	jra	00104$
 00102$:
 ;	libs/stm8l_gpio.c: 105: GPIOx->ODR &= (uint8_t)(~GPIO_Pin);
-	push	a
-	ld	a, (0x07, sp)
 	cpl	a
-	ld	(0x02, sp), a
-	pop	a
 	and	a, (0x01, sp)
 	ld	(x), a
 00104$:
 ;	libs/stm8l_gpio.c: 107: }
 	pop	a
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_gpio.c: 109: void GPIO_SetBits(GPIO_TypeDef* GPIOx, uint8_t GPIO_Pin)
 ;	-----------------------------------------
 ;	 function GPIO_SetBits
 ;	-----------------------------------------
 _GPIO_SetBits:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_gpio.c: 111: GPIOx->ODR |= GPIO_Pin;
-	ldw	x, (0x03, sp)
 	ld	a, (x)
-	or	a, (0x05, sp)
+	or	a, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_gpio.c: 112: }
+	pop	a
 	ret
 ;	libs/stm8l_gpio.c: 114: void GPIO_ResetBits(GPIO_TypeDef* GPIOx, uint8_t GPIO_Pin)
 ;	-----------------------------------------
@@ -268,10 +270,10 @@ _GPIO_SetBits:
 _GPIO_ResetBits:
 	push	a
 ;	libs/stm8l_gpio.c: 116: GPIOx->ODR &= (uint8_t)(~GPIO_Pin);
-	ldw	x, (0x04, sp)
+	push	a
 	ld	a, (x)
-	ld	(0x01, sp), a
-	ld	a, (0x06, sp)
+	ld	(0x02, sp), a
+	pop	a
 	cpl	a
 	and	a, (0x01, sp)
 	ld	(x), a
@@ -283,12 +285,14 @@ _GPIO_ResetBits:
 ;	 function GPIO_ToggleBits
 ;	-----------------------------------------
 _GPIO_ToggleBits:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_gpio.c: 121: GPIOx->ODR ^= GPIO_Pin;
-	ldw	x, (0x03, sp)
 	ld	a, (x)
-	xor	a, (0x05, sp)
+	xor	a, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_gpio.c: 122: }
+	pop	a
 	ret
 ;	libs/stm8l_gpio.c: 124: uint8_t GPIO_ReadInputData(GPIO_TypeDef* GPIOx)
 ;	-----------------------------------------
@@ -296,7 +300,6 @@ _GPIO_ToggleBits:
 ;	-----------------------------------------
 _GPIO_ReadInputData:
 ;	libs/stm8l_gpio.c: 126: return ((uint8_t)GPIOx->IDR);
-	ldw	x, (0x03, sp)
 	ld	a, (0x1, x)
 ;	libs/stm8l_gpio.c: 127: }
 	ret
@@ -305,22 +308,26 @@ _GPIO_ReadInputData:
 ;	 function GPIO_ReadInputDataBit
 ;	-----------------------------------------
 _GPIO_ReadInputDataBit:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_gpio.c: 131: return ((BitStatus)(GPIOx->IDR & (uint8_t)GPIO_Pin));
-	ldw	x, (0x03, sp)
 	ld	a, (0x1, x)
-	and	a, (0x05, sp)
+	and	a, (0x01, sp)
 ;	libs/stm8l_gpio.c: 132: }
+	addw	sp, #1
 	ret
 ;	libs/stm8l_gpio.c: 134: BitStatus GPIO_ReadOutputDataBit(GPIO_TypeDef* GPIOx, GPIO_Pin_TypeDef GPIO_Pin)
 ;	-----------------------------------------
 ;	 function GPIO_ReadOutputDataBit
 ;	-----------------------------------------
 _GPIO_ReadOutputDataBit:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_gpio.c: 136: return ((BitStatus)(GPIOx->ODR & (uint8_t)GPIO_Pin));
-	ldw	x, (0x03, sp)
 	ld	a, (x)
-	and	a, (0x05, sp)
+	and	a, (0x01, sp)
 ;	libs/stm8l_gpio.c: 137: }
+	addw	sp, #1
 	ret
 	.area CODE
 	.area CONST

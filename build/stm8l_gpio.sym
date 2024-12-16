@@ -8,16 +8,16 @@ Symbol Table
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000001 L
   9 _GPIO_DeInit                                                   000000 GR
-  9 _GPIO_ExternalPullUpConfig                                     000084 GR
-  9 _GPIO_Init                                                     00000F GR
-  9 _GPIO_ReadInputData                                            0000DB GR
-  9 _GPIO_ReadInputDataBit                                         0000E0 GR
-  9 _GPIO_ReadOutputDataBit                                        0000E7 GR
-  9 _GPIO_ResetBits                                                0000C6 GR
-  9 _GPIO_SetBits                                                  0000BF GR
-  9 _GPIO_ToggleBits                                               0000D4 GR
+  9 _GPIO_ExternalPullUpConfig                                     000086 GR
+  9 _GPIO_Init                                                     00000E GR
+  9 _GPIO_ReadInputData                                            0000D7 GR
+  9 _GPIO_ReadInputDataBit                                         0000DA GR
+  9 _GPIO_ReadOutputDataBit                                        0000E4 GR
+  9 _GPIO_ResetBits                                                0000C2 GR
+  9 _GPIO_SetBits                                                  0000B9 GR
+  9 _GPIO_ToggleBits                                               0000CE GR
   9 _GPIO_Write                                                    0000A0 GR
-  9 _GPIO_WriteBit                                                 0000A6 GR
+  9 _GPIO_WriteBit                                                 0000A2 GR
 
 ASxxxx Assembler V02.00 + NoICE + SDCC mods  (STMicroelectronics STM8), page 2.
 Hexadecimal [24-Bits]

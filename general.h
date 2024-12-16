@@ -29,3 +29,4 @@
 #define TIMER_200_MS (20)
 #define TIMER_100_MS (10)
 #define TIMER_50_MS (5)
+#define TIMER_10_MS (1)

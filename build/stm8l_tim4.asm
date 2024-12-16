@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (Linux)
+; Version 4.2.0 #13081 (Linux)
 ;--------------------------------------------------------
 	.module stm8l_tim4
 	.optsdcc -mstm8
@@ -99,52 +99,53 @@ _TIM4_DeInit:
 _TIM4_TimeBaseInit:
 ;	libs/stm8l_tim4.c: 171: TIM4->ARR = (uint8_t)(TIM4_Period);
 	ldw	x, #0x52e9
+	push	a
 	ld	a, (0x04, sp)
 	ld	(x), a
+	pop	a
 ;	libs/stm8l_tim4.c: 173: TIM4->PSCR = (uint8_t)(TIM4_Prescaler);
-	ldw	x, #0x52e8
-	ld	a, (0x03, sp)
-	ld	(x), a
+	ld	0x52e8, a
 ;	libs/stm8l_tim4.c: 176: TIM4->EGR = TIM4_EventSource_Update;
 	mov	0x52e6+0, #0x01
 ;	libs/stm8l_tim4.c: 177: }
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_tim4.c: 205: void TIM4_PrescalerConfig(TIM4_Prescaler_TypeDef Prescaler,
 ;	-----------------------------------------
 ;	 function TIM4_PrescalerConfig
 ;	-----------------------------------------
 _TIM4_PrescalerConfig:
 ;	libs/stm8l_tim4.c: 213: TIM4->PSCR = (uint8_t) Prescaler;
-	ldw	x, #0x52e8
-	ld	a, (0x03, sp)
-	ld	(x), a
+	ld	0x52e8, a
 ;	libs/stm8l_tim4.c: 218: TIM4->EGR |= TIM4_EGR_UG ;
 	ld	a, 0x52e6
 ;	libs/stm8l_tim4.c: 216: if (TIM4_PSCReloadMode == TIM4_PSCReloadMode_Immediate)
 	push	a
-	ld	a, (0x05, sp)
+	ld	a, (0x04, sp)
 	dec	a
 	pop	a
 	jrne	00102$
 ;	libs/stm8l_tim4.c: 218: TIM4->EGR |= TIM4_EGR_UG ;
 	or	a, #0x01
 	ld	0x52e6, a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 222: TIM4->EGR &= (uint8_t)(~TIM4_EGR_UG) ;
 	and	a, #0xfe
 	ld	0x52e6, a
+00104$:
 ;	libs/stm8l_tim4.c: 224: }
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_tim4.c: 232: void TIM4_SetCounter(uint8_t Counter)
 ;	-----------------------------------------
 ;	 function TIM4_SetCounter
 ;	-----------------------------------------
 _TIM4_SetCounter:
 ;	libs/stm8l_tim4.c: 235: TIM4->CNTR = (uint8_t)(Counter);
-	ldw	x, #0x52e7
-	ld	a, (0x03, sp)
-	ld	(x), a
+	ld	0x52e7, a
 ;	libs/stm8l_tim4.c: 236: }
 	ret
 ;	libs/stm8l_tim4.c: 244: void TIM4_SetAutoreload(uint8_t Autoreload)
@@ -153,9 +154,7 @@ _TIM4_SetCounter:
 ;	-----------------------------------------
 _TIM4_SetAutoreload:
 ;	libs/stm8l_tim4.c: 247: TIM4->ARR = (uint8_t)(Autoreload);
-	ldw	x, #0x52e9
-	ld	a, (0x03, sp)
-	ld	(x), a
+	ld	0x52e9, a
 ;	libs/stm8l_tim4.c: 248: }
 	ret
 ;	libs/stm8l_tim4.c: 255: uint8_t TIM4_GetCounter(void)
@@ -182,31 +181,36 @@ _TIM4_GetPrescaler:
 ;	 function TIM4_UpdateDisableConfig
 ;	-----------------------------------------
 _TIM4_UpdateDisableConfig:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 304: TIM4->CR1 |= TIM4_CR1_UDIS ;
 	ld	a, 0x52e0
 ;	libs/stm8l_tim4.c: 302: if (NewState != DISABLE)
-	tnz	(0x03, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 304: TIM4->CR1 |= TIM4_CR1_UDIS ;
 	or	a, #0x02
 	ld	0x52e0, a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 308: TIM4->CR1 &= (uint8_t)(~TIM4_CR1_UDIS) ;
 	and	a, #0xfd
 	ld	0x52e0, a
+00104$:
 ;	libs/stm8l_tim4.c: 310: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 320: void TIM4_UpdateRequestConfig(TIM4_UpdateSource_TypeDef TIM4_UpdateSource)
 ;	-----------------------------------------
 ;	 function TIM4_UpdateRequestConfig
 ;	-----------------------------------------
 _TIM4_UpdateRequestConfig:
+	ld	xl, a
 ;	libs/stm8l_tim4.c: 328: TIM4->CR1 |= TIM4_CR1_URS ;
 	ld	a, 0x52e0
 ;	libs/stm8l_tim4.c: 326: if (TIM4_UpdateSource == TIM4_UpdateSource_Regular)
 	push	a
-	ld	a, (0x04, sp)
+	ld	a, xl
 	dec	a
 	pop	a
 	jrne	00102$
@@ -225,31 +229,36 @@ _TIM4_UpdateRequestConfig:
 ;	 function TIM4_ARRPreloadConfig
 ;	-----------------------------------------
 _TIM4_ARRPreloadConfig:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 350: TIM4->CR1 |= TIM4_CR1_ARPE ;
 	ld	a, 0x52e0
 ;	libs/stm8l_tim4.c: 348: if (NewState != DISABLE)
-	tnz	(0x03, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 350: TIM4->CR1 |= TIM4_CR1_ARPE ;
 	or	a, #0x80
 	ld	0x52e0, a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 354: TIM4->CR1 &= (uint8_t)(~TIM4_CR1_ARPE) ;
 	and	a, #0x7f
 	ld	0x52e0, a
+00104$:
 ;	libs/stm8l_tim4.c: 356: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 366: void TIM4_SelectOnePulseMode(TIM4_OPMode_TypeDef TIM4_OPMode)
 ;	-----------------------------------------
 ;	 function TIM4_SelectOnePulseMode
 ;	-----------------------------------------
 _TIM4_SelectOnePulseMode:
+	ld	xl, a
 ;	libs/stm8l_tim4.c: 374: TIM4->CR1 |= TIM4_CR1_OPM ;
 	ld	a, 0x52e0
 ;	libs/stm8l_tim4.c: 372: if (TIM4_OPMode == TIM4_OPMode_Single)
 	push	a
-	ld	a, (0x04, sp)
+	ld	a, xl
 	dec	a
 	pop	a
 	jrne	00102$
@@ -268,20 +277,24 @@ _TIM4_SelectOnePulseMode:
 ;	 function TIM4_Cmd
 ;	-----------------------------------------
 _TIM4_Cmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 396: TIM4->CR1 |= TIM4_CR1_CEN ;
 	ld	a, 0x52e0
 ;	libs/stm8l_tim4.c: 394: if (NewState != DISABLE)
-	tnz	(0x03, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 396: TIM4->CR1 |= TIM4_CR1_CEN ;
 	or	a, #0x01
 	ld	0x52e0, a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 400: TIM4->CR1 &= (uint8_t)(~TIM4_CR1_CEN) ;
 	and	a, #0xfe
 	ld	0x52e0, a
+00104$:
 ;	libs/stm8l_tim4.c: 402: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 430: void TIM4_ITConfig(TIM4_IT_TypeDef TIM4_IT, FunctionalState NewState)
 ;	-----------------------------------------
@@ -290,55 +303,64 @@ _TIM4_Cmd:
 _TIM4_ITConfig:
 	push	a
 ;	libs/stm8l_tim4.c: 439: TIM4->IER |= (uint8_t)TIM4_IT;
-	ld	a, 0x52e4
+	ldw	x, #0x52e4
+	push	a
+	ld	a, (x)
+	ld	(0x02, sp), a
+	pop	a
 ;	libs/stm8l_tim4.c: 436: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 439: TIM4->IER |= (uint8_t)TIM4_IT;
-	or	a, (0x04, sp)
+	or	a, (0x01, sp)
 	ld	0x52e4, a
 	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 444: TIM4->IER &= (uint8_t)(~(uint8_t)TIM4_IT);
-	push	a
-	ld	a, (0x05, sp)
 	cpl	a
-	ld	(0x02, sp), a
-	pop	a
 	and	a, (0x01, sp)
 	ld	0x52e4, a
 00104$:
 ;	libs/stm8l_tim4.c: 446: }
 	pop	a
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_tim4.c: 456: void TIM4_GenerateEvent(TIM4_EventSource_TypeDef TIM4_EventSource)
 ;	-----------------------------------------
 ;	 function TIM4_GenerateEvent
 ;	-----------------------------------------
 _TIM4_GenerateEvent:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 462: TIM4->EGR |= (uint8_t)TIM4_EventSource;
 	ld	a, 0x52e6
-	or	a, (0x03, sp)
+	or	a, (0x01, sp)
 	ld	0x52e6, a
 ;	libs/stm8l_tim4.c: 463: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 474: FlagStatus TIM4_GetFlagStatus(TIM4_FLAG_TypeDef TIM4_FLAG)
 ;	-----------------------------------------
 ;	 function TIM4_GetFlagStatus
 ;	-----------------------------------------
 _TIM4_GetFlagStatus:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 481: if ((TIM4->SR1 & (uint8_t)TIM4_FLAG)  != 0)
 	ld	a, 0x52e5
-	and	a, (0x03, sp)
+	and	a, (0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 483: bitstatus = SET;
 	ld	a, #0x01
-	ret
-00102$:
 ;	libs/stm8l_tim4.c: 487: bitstatus = RESET;
+	.byte 0x21
+00102$:
 	clr	a
+00103$:
 ;	libs/stm8l_tim4.c: 489: return ((FlagStatus)bitstatus);
 ;	libs/stm8l_tim4.c: 490: }
+	addw	sp, #1
 	ret
 ;	libs/stm8l_tim4.c: 500: void TIM4_ClearFlag(TIM4_FLAG_TypeDef TIM4_FLAG)
 ;	-----------------------------------------
@@ -346,7 +368,6 @@ _TIM4_GetFlagStatus:
 ;	-----------------------------------------
 _TIM4_ClearFlag:
 ;	libs/stm8l_tim4.c: 505: TIM4->SR1 = (uint8_t)(~((uint8_t)TIM4_FLAG));
-	ld	a, (0x03, sp)
 	cpl	a
 	ld	0x52e5, a
 ;	libs/stm8l_tim4.c: 506: }
@@ -356,14 +377,15 @@ _TIM4_ClearFlag:
 ;	 function TIM4_GetITStatus
 ;	-----------------------------------------
 _TIM4_GetITStatus:
-	push	a
+	sub	sp, #2
+	ld	(0x02, sp), a
 ;	libs/stm8l_tim4.c: 527: itStatus = (uint8_t)(TIM4->SR1 & (uint8_t)TIM4_IT);
 	ld	a, 0x52e5
-	and	a, (0x04, sp)
+	and	a, (0x02, sp)
 	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 529: itEnable = (uint8_t)(TIM4->IER & (uint8_t)TIM4_IT);
 	ld	a, 0x52e4
-	and	a, (0x04, sp)
+	and	a, (0x02, sp)
 ;	libs/stm8l_tim4.c: 531: if ((itStatus != (uint8_t)RESET ) && (itEnable != (uint8_t)RESET ))
 	tnz	(0x01, sp)
 	jreq	00102$
@@ -378,7 +400,7 @@ _TIM4_GetITStatus:
 00103$:
 ;	libs/stm8l_tim4.c: 539: return ((ITStatus)bitstatus);
 ;	libs/stm8l_tim4.c: 540: }
-	addw	sp, #1
+	addw	sp, #2
 	ret
 ;	libs/stm8l_tim4.c: 550: void TIM4_ClearITPendingBit(TIM4_IT_TypeDef TIM4_IT)
 ;	-----------------------------------------
@@ -386,7 +408,6 @@ _TIM4_GetITStatus:
 ;	-----------------------------------------
 _TIM4_ClearITPendingBit:
 ;	libs/stm8l_tim4.c: 556: TIM4->SR1 = (uint8_t)(~(uint8_t)TIM4_IT);
-	ld	a, (0x03, sp)
 	cpl	a
 	ld	0x52e5, a
 ;	libs/stm8l_tim4.c: 557: }
@@ -398,27 +419,29 @@ _TIM4_ClearITPendingBit:
 _TIM4_DMACmd:
 	push	a
 ;	libs/stm8l_tim4.c: 577: TIM4->DER |= (uint8_t)TIM4_DMASource;
-	ld	a, 0x52e3
+	ldw	x, #0x52e3
+	push	a
+	ld	a, (x)
+	ld	(0x02, sp), a
+	pop	a
 ;	libs/stm8l_tim4.c: 574: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 577: TIM4->DER |= (uint8_t)TIM4_DMASource;
-	or	a, (0x04, sp)
+	or	a, (0x01, sp)
 	ld	0x52e3, a
 	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 582: TIM4->DER &= (uint8_t)~TIM4_DMASource;
-	push	a
-	ld	a, (0x05, sp)
 	cpl	a
-	ld	(0x02, sp), a
-	pop	a
 	and	a, (0x01, sp)
 	ld	0x52e3, a
 00104$:
 ;	libs/stm8l_tim4.c: 584: }
 	pop	a
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_tim4.c: 607: void TIM4_InternalClockConfig(void)
 ;	-----------------------------------------
 ;	 function TIM4_InternalClockConfig
@@ -435,65 +458,78 @@ _TIM4_InternalClockConfig:
 ;	 function TIM4_SelectInputTrigger
 ;	-----------------------------------------
 _TIM4_SelectInputTrigger:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 658: tmpsmcr = TIM4->SMCR;
 	ld	a, 0x52e2
 ;	libs/stm8l_tim4.c: 661: tmpsmcr &= (uint8_t)(~TIM4_SMCR_TS);
 	and	a, #0x8f
 ;	libs/stm8l_tim4.c: 662: tmpsmcr |= (uint8_t)TIM4_InputTriggerSource;
-	or	a, (0x03, sp)
+	or	a, (0x01, sp)
 ;	libs/stm8l_tim4.c: 664: TIM4->SMCR = (uint8_t)tmpsmcr;
 	ld	0x52e2, a
 ;	libs/stm8l_tim4.c: 665: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 676: void TIM4_SelectOutputTrigger(TIM4_TRGOSource_TypeDef TIM4_TRGOSource)
 ;	-----------------------------------------
 ;	 function TIM4_SelectOutputTrigger
 ;	-----------------------------------------
 _TIM4_SelectOutputTrigger:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 683: tmpcr2 = TIM4->CR2;
 	ld	a, 0x52e1
 ;	libs/stm8l_tim4.c: 686: tmpcr2 &= (uint8_t)(~TIM4_CR2_MMS);
 	and	a, #0x8f
 ;	libs/stm8l_tim4.c: 689: tmpcr2 |=  (uint8_t)TIM4_TRGOSource;
-	or	a, (0x03, sp)
+	or	a, (0x01, sp)
 ;	libs/stm8l_tim4.c: 691: TIM4->CR2 = tmpcr2;
 	ld	0x52e1, a
 ;	libs/stm8l_tim4.c: 692: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 706: void TIM4_SelectSlaveMode(TIM4_SlaveMode_TypeDef TIM4_SlaveMode)
 ;	-----------------------------------------
 ;	 function TIM4_SelectSlaveMode
 ;	-----------------------------------------
 _TIM4_SelectSlaveMode:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 713: tmpsmcr = TIM4->SMCR;
 	ld	a, 0x52e2
 ;	libs/stm8l_tim4.c: 716: tmpsmcr &= (uint8_t)(~TIM4_SMCR_SMS);
 	and	a, #0xf8
 ;	libs/stm8l_tim4.c: 719: tmpsmcr |= (uint8_t)TIM4_SlaveMode;
-	or	a, (0x03, sp)
+	or	a, (0x01, sp)
 ;	libs/stm8l_tim4.c: 721: TIM4->SMCR = tmpsmcr;
 	ld	0x52e2, a
 ;	libs/stm8l_tim4.c: 722: }
+	pop	a
 	ret
 ;	libs/stm8l_tim4.c: 730: void TIM4_SelectMasterSlaveMode(FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function TIM4_SelectMasterSlaveMode
 ;	-----------------------------------------
 _TIM4_SelectMasterSlaveMode:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_tim4.c: 738: TIM4->SMCR |= TIM4_SMCR_MSM;
 	ld	a, 0x52e2
 ;	libs/stm8l_tim4.c: 736: if (NewState != DISABLE)
-	tnz	(0x03, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_tim4.c: 738: TIM4->SMCR |= TIM4_SMCR_MSM;
 	or	a, #0x80
 	ld	0x52e2, a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_tim4.c: 742: TIM4->SMCR &= (uint8_t)(~TIM4_SMCR_MSM);
 	and	a, #0x7f
 	ld	0x52e2, a
+00104$:
 ;	libs/stm8l_tim4.c: 744: }
+	pop	a
 	ret
 	.area CODE
 	.area CONST

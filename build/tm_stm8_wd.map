@@ -7,8 +7,7 @@ Area                                    Addr        Size        Decimal Bytes (A
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     FFFFFFFF  s_SSEG                          
-     00000000  .__.ABS.                           
+     00000000  .__.ABS.                           _divulong
      00000000  l_CABS                          
      00000000  l_DABS                          
      00000000  l_INITIALIZED                   
@@ -23,9 +22,10 @@ Area                                    Addr        Size        Decimal Bytes (A
      00000005  l_CONST                         
      00000015  l_DATA                          
      00000016  s_INITIALIZED                   
+     00000016  s_SSEG                          
      0000001A  l_GSINIT                        
      00000073  l_HOME                          
-     00000D45  l_CODE                          
+     00000CBA  l_CODE                          
      00008000  s_HOME                          
      00008073  s_GSINIT                        
      0000808D  s_GSFINAL                       
@@ -50,7 +50,7 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-SSEG                                FFFFFFFF    00000001 =           1. bytes (REL,CON)
+SSEG                                00000016    00000001 =           1. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
@@ -97,112 +97,112 @@ Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008095    00000D45 =        3397. bytes (REL,CON)
+CODE                                00008095    00000CBA =        3258. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
      00008095  _SetTimer                          main
-     000080C9  _tick                              main
-     000082AC  _ReadInputGpio                     main
-     00008341  _TimerMatch                        main
-     000083AF  _IRQ_Handler_TIM4                  main
-     000083BC  _main                              main
-     000084EB  _GPIO_DeInit                       stm8l_gpio
-     000084FA  _GPIO_Init                         stm8l_gpio
-     0000856F  _GPIO_ExternalPullUpConfig         stm8l_gpio
-     0000858B  _GPIO_Write                        stm8l_gpio
-     00008591  _GPIO_WriteBit                     stm8l_gpio
-     000085AA  _GPIO_SetBits                      stm8l_gpio
-     000085B1  _GPIO_ResetBits                    stm8l_gpio
-     000085BF  _GPIO_ToggleBits                   stm8l_gpio
-     000085C6  _GPIO_ReadInputData                stm8l_gpio
-     000085CB  _GPIO_ReadInputDataBit             stm8l_gpio
-     000085D2  _GPIO_ReadOutputDataBit            stm8l_gpio
-     000085D8  _CLK_DeInit                        stm8l_clk
-     00008619  _CLK_HSICmd                        stm8l_clk
-     0000862C  _CLK_AdjustHSICalibrationValue     stm8l_clk
-     0000863B  _CLK_LSICmd                        stm8l_clk
-     0000864E  _CLK_HSEConfig                     stm8l_clk
-     0000865F  _CLK_LSEConfig                     stm8l_clk
-     00008670  _CLK_ClockSecuritySystemEnable     stm8l_clk
-     00008675  _CLK_ClockSecuritySytemDeglitchC   stm8l_clk
-     00008688  _CLK_CCOConfig                     stm8l_clk
-     00008690  _CLK_SYSCLKSourceConfig            stm8l_clk
-     00008697  _CLK_GetSYSCLKSource               stm8l_clk
-     0000869B  _CLK_GetClockFreq                  stm8l_clk
-     000086EF  _CLK_SYSCLKDivConfig               stm8l_clk
-     000086F6  _CLK_SYSCLKSourceSwitchCmd         stm8l_clk
-     00008709  _CLK_RTCClockConfig                stm8l_clk
-     00008711  _CLK_BEEPClockConfig               stm8l_clk
-     00008718  _CLK_PeripheralClockConfig         stm8l_clk
-     00008782  _CLK_LSEClockSecuritySystemEnabl   stm8l_clk
-     00008787  _CLK_RTCCLKSwitchOnLSEFailureEna   stm8l_clk
-     0000878C  _CLK_HaltConfig                    stm8l_clk
-     000087A9  _CLK_MainRegulatorCmd              stm8l_clk
-     000087BC  _CLK_ITConfig                      stm8l_clk
-     00008808  _CLK_GetFlagStatus                 stm8l_clk
-     00008878  _CLK_ClearFlag                     stm8l_clk
-     0000887D  _CLK_GetITStatus                   stm8l_clk
-     000088B0  _CLK_ClearITPendingBit             stm8l_clk
-     000088C2  _TIM4_DeInit                       stm8l_tim4
-     000088E3  _TIM4_TimeBaseInit                 stm8l_tim4
-     000088F4  _TIM4_PrescalerConfig              stm8l_tim4
-     00008910  _TIM4_SetCounter                   stm8l_tim4
-     00008917  _TIM4_SetAutoreload                stm8l_tim4
-     0000891E  _TIM4_GetCounter                   stm8l_tim4
-     00008922  _TIM4_GetPrescaler                 stm8l_tim4
+     000080AE  _tick                              main
+     0000822E  _ReadInputGpio                     main
+     000082AE  _TimerMatch                        main
+     000082F7  _IRQ_Handler_TIM4                  main
+     00008303  _main                              main
+     000083EE  _GPIO_DeInit                       stm8l_gpio
+     000083FC  _GPIO_Init                         stm8l_gpio
+     00008474  _GPIO_ExternalPullUpConfig         stm8l_gpio
+     0000848E  _GPIO_Write                        stm8l_gpio
+     00008490  _GPIO_WriteBit                     stm8l_gpio
+     000084A7  _GPIO_SetBits                      stm8l_gpio
+     000084B0  _GPIO_ResetBits                    stm8l_gpio
+     000084BC  _GPIO_ToggleBits                   stm8l_gpio
+     000084C5  _GPIO_ReadInputData                stm8l_gpio
+     000084C8  _GPIO_ReadInputDataBit             stm8l_gpio
+     000084D2  _GPIO_ReadOutputDataBit            stm8l_gpio
+     000084DB  _CLK_DeInit                        stm8l_clk
+     0000851C  _CLK_HSICmd                        stm8l_clk
+     00008534  _CLK_AdjustHSICalibrationValue     stm8l_clk
+     00008540  _CLK_LSICmd                        stm8l_clk
+     00008558  _CLK_HSEConfig                     stm8l_clk
+     0000856D  _CLK_LSEConfig                     stm8l_clk
+     00008582  _CLK_ClockSecuritySystemEnable     stm8l_clk
+     00008587  _CLK_ClockSecuritySytemDeglitchC   stm8l_clk
+     0000859F  _CLK_CCOConfig                     stm8l_clk
+     000085A7  _CLK_SYSCLKSourceConfig            stm8l_clk
+     000085AB  _CLK_GetSYSCLKSource               stm8l_clk
+     000085AF  _CLK_GetClockFreq                  stm8l_clk
+     00008602  _CLK_SYSCLKDivConfig               stm8l_clk
+     00008606  _CLK_SYSCLKSourceSwitchCmd         stm8l_clk
+     0000861E  _CLK_RTCClockConfig                stm8l_clk
+     00008626  _CLK_BEEPClockConfig               stm8l_clk
+     0000862A  _CLK_PeripheralClockConfig         stm8l_clk
+     00008694  _CLK_LSEClockSecuritySystemEnabl   stm8l_clk
+     00008699  _CLK_RTCCLKSwitchOnLSEFailureEna   stm8l_clk
+     0000869E  _CLK_HaltConfig                    stm8l_clk
+     000086BC  _CLK_MainRegulatorCmd              stm8l_clk
+     000086D4  _CLK_ITConfig                      stm8l_clk
+     00008739  _CLK_GetFlagStatus                 stm8l_clk
+     000087A7  _CLK_ClearFlag                     stm8l_clk
+     000087AC  _CLK_GetITStatus                   stm8l_clk
+     000087E6  _CLK_ClearITPendingBit             stm8l_clk
+     000087F6  _TIM4_DeInit                       stm8l_tim4
+     00008817  _TIM4_TimeBaseInit                 stm8l_tim4
+     00008829  _TIM4_PrescalerConfig              stm8l_tim4
+     00008845  _TIM4_SetCounter                   stm8l_tim4
+     00008849  _TIM4_SetAutoreload                stm8l_tim4
+     0000884D  _TIM4_GetCounter                   stm8l_tim4
+     00008851  _TIM4_GetPrescaler                 stm8l_tim4
 ASxxxx Linker V03.00 + NoICE + sdld,  page 9.
 Hexadecimal  [32-Bits]
 
 Area                                    Addr        Size        Decimal Bytes (Attributes)
 --------------------------------        ----        ----        ------- ----- ------------
-CODE                                00008095    00000D45 =        3397. bytes (REL,CON)
+CODE                                00008095    00000CBA =        3258. bytes (REL,CON)
 
       Value  Global                              Global Defined In Module
       -----  --------------------------------   ------------------------
-     00008926  _TIM4_UpdateDisableConfig          stm8l_tim4
-     00008939  _TIM4_UpdateRequestConfig          stm8l_tim4
-     0000894F  _TIM4_ARRPreloadConfig             stm8l_tim4
-     00008962  _TIM4_SelectOnePulseMode           stm8l_tim4
-     00008978  _TIM4_Cmd                          stm8l_tim4
-     0000898B  _TIM4_ITConfig                     stm8l_tim4
-     000089A8  _TIM4_GenerateEvent                stm8l_tim4
-     000089B1  _TIM4_GetFlagStatus                stm8l_tim4
-     000089BD  _TIM4_ClearFlag                    stm8l_tim4
-     000089C4  _TIM4_GetITStatus                  stm8l_tim4
-     000089DF  _TIM4_ClearITPendingBit            stm8l_tim4
-     000089E6  _TIM4_DMACmd                       stm8l_tim4
-     00008A03  _TIM4_InternalClockConfig          stm8l_tim4
-     00008A0C  _TIM4_SelectInputTrigger           stm8l_tim4
-     00008A17  _TIM4_SelectOutputTrigger          stm8l_tim4
-     00008A22  _TIM4_SelectSlaveMode              stm8l_tim4
-     00008A2D  _TIM4_SelectMasterSlaveMode        stm8l_tim4
-     00008A40  _USART_DeInit                      stm8l_usart
-     00008A5B  _USART_Init                        stm8l_usart
-     00008AEF  _USART_ClockInit                   stm8l_usart
-     00008B14  _USART_Cmd                         stm8l_usart
-     00008B26  _USART_SetPrescaler                stm8l_usart
-     00008B2D  _USART_SendBreak                   stm8l_usart
-     00008B37  _USART_ReceiveData8                stm8l_usart
-     00008B3C  _USART_ReceiveData9                stm8l_usart
-     00008B5A  _USART_SendData8                   stm8l_usart
-     00008B61  _USART_SendData9                   stm8l_usart
-     00008B89  _USART_ReceiverWakeUpCmd           stm8l_usart
-     00008B9B  _USART_SetAddress                  stm8l_usart
-     00008BAB  _USART_WakeUpConfig                stm8l_usart
-     00008BBB  _USART_HalfDuplexCmd               stm8l_usart
-     00008BCD  _USART_SmartCardCmd                stm8l_usart
-     00008BDF  _USART_SmartCardNACKCmd            stm8l_usart
-     00008BF1  _USART_SetGuardTime                stm8l_usart
-     00008BF8  _USART_IrDAConfig                  stm8l_usart
-     00008C0A  _USART_IrDACmd                     stm8l_usart
-     00008C1C  _USART_DMACmd                      stm8l_usart
-     00008C38  _USART_ITConfig                    stm8l_usart
-     00008CC1  _USART_GetFlagStatus               stm8l_usart
-     00008CE9  _USART_ClearFlag                   stm8l_usart
-     00008CF2  _USART_GetITStatus                 stm8l_usart
-     00008D79  _USART_ClearITPendingBit           stm8l_usart
-     00008D80  __divulong                         
+     00008855  _TIM4_UpdateDisableConfig          stm8l_tim4
+     0000886D  _TIM4_UpdateRequestConfig          stm8l_tim4
+     00008883  _TIM4_ARRPreloadConfig             stm8l_tim4
+     0000889B  _TIM4_SelectOnePulseMode           stm8l_tim4
+     000088B1  _TIM4_Cmd                          stm8l_tim4
+     000088C9  _TIM4_ITConfig                     stm8l_tim4
+     000088E7  _TIM4_GenerateEvent                stm8l_tim4
+     000088F4  _TIM4_GetFlagStatus                stm8l_tim4
+     00008905  _TIM4_ClearFlag                    stm8l_tim4
+     0000890A  _TIM4_GetITStatus                  stm8l_tim4
+     00008928  _TIM4_ClearITPendingBit            stm8l_tim4
+     0000892D  _TIM4_DMACmd                       stm8l_tim4
+     0000894B  _TIM4_InternalClockConfig          stm8l_tim4
+     00008954  _TIM4_SelectInputTrigger           stm8l_tim4
+     00008963  _TIM4_SelectOutputTrigger          stm8l_tim4
+     00008972  _TIM4_SelectSlaveMode              stm8l_tim4
+     00008981  _TIM4_SelectMasterSlaveMode        stm8l_tim4
+     00008999  _USART_DeInit                      stm8l_usart
+     000089B1  _USART_Init                        stm8l_usart
+     00008A40  _USART_ClockInit                   stm8l_usart
+     00008A79  _USART_Cmd                         stm8l_usart
+     00008A8E  _USART_SetPrescaler                stm8l_usart
+     00008A93  _USART_SendBreak                   stm8l_usart
+     00008A9B  _USART_ReceiveData8                stm8l_usart
+     00008A9E  _USART_ReceiveData9                stm8l_usart
+     00008ABB  _USART_SendData8                   stm8l_usart
+     00008ABE  _USART_SendData9                   stm8l_usart
+     00008AE4  _USART_ReceiverWakeUpCmd           stm8l_usart
+     00008AF9  _USART_SetAddress                  stm8l_usart
+     00008B0B  _USART_WakeUpConfig                stm8l_usart
+     00008B1D  _USART_HalfDuplexCmd               stm8l_usart
+     00008B32  _USART_SmartCardCmd                stm8l_usart
+     00008B47  _USART_SmartCardNACKCmd            stm8l_usart
+     00008B5C  _USART_SetGuardTime                stm8l_usart
+     00008B61  _USART_IrDAConfig                  stm8l_usart
+     00008B76  _USART_IrDACmd                     stm8l_usart
+     00008B8B  _USART_DMACmd                      stm8l_usart
+     00008BA5  _USART_ITConfig                    stm8l_usart
+     00008C34  _USART_GetFlagStatus               stm8l_usart
+     00008C5C  _USART_ClearFlag                   stm8l_usart
+     00008C68  _USART_GetITStatus                 stm8l_usart
+     00008CF1  _USART_ClearITPendingBit           stm8l_usart
+     00008CF6  __divulong                         _divulong
 ASxxxx Linker V03.00 + NoICE + sdld,  page 10.
 
 Files Linked                              [ module(s) ]
@@ -224,6 +224,5 @@ User Base Address Definitions
 
 HOME = 0x8000
 DATA = 0x0001
-SSEG = 0xffffffff
 
 

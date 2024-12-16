@@ -11,14 +11,13 @@
 #define PUTCHAR_PROTOTYPE int putchar (int c)
 
 enum state_t { WAIT_PWR_BTN,  POWER_ON_5V, WAIT_PGOOD, WAIT_CARRIER_ON, PWR_ERROR, CPU_START, CPU_NO_RST, WORK_STATE };
-enum event_t { start, timer_0, timer_1, timer_2, timer_3, pwrbtn_on, pwrbtn_off, pgood_5v, carrier };
+enum event_t { start, timer_0, timer_1, timer_2, pwrbtn_on, pwrbtn_off, pgood_5v, carrier };
 
 volatile unsigned char bMainTimer;
 struct SysCntrl_t {
 	unsigned int Timer_0;
 	unsigned int Timer_1;
 	unsigned int Timer_2;
-	unsigned int Timer_3;
 	unsigned int Timer;
 
 	enum state_t state;
@@ -27,6 +26,7 @@ struct SysCntrl_t {
 	uint8_t btn_state;
 	unsigned int btn_last_change;
 	unsigned int btn_change_time;
+	unsigned int btn_press_time;
 	
 
 	uint8_t InputReg;
@@ -37,7 +37,6 @@ struct SysCntrl_t {
 
 void SetTimer(uint8_t tmr, unsigned int value)
 {
-	//asm("cli");
 	switch (tmr) {
 	case 0:
 		SysCntrl.Timer_0 = value;
@@ -48,80 +47,54 @@ void SetTimer(uint8_t tmr, unsigned int value)
 	case 2:
 		SysCntrl.Timer_2 = value;
 		break;
-	case 3:
-		SysCntrl.Timer_3 = value;
-		break;
 	}
-	//asm("sei");
 }
 
 void tick(enum event_t ev)
 {
-	//WAIT_PWR_BTN,  POWER_ON_5V, WAIT_PGOOD, WAIT_CARRIER_ON
 	switch (SysCntrl.state) {
 	case WAIT_PWR_BTN:
 		if (ev == start) {
-			//SetTimer(0, TIMER_300_MS);
-			SetTimer(3, TIMER_1_SEC);
+			SetTimer(1, TIMER_1_SEC);
 		}
 
-		if ( ev == timer_3){
+		if ( ev == timer_1){
 			GPIO_ToggleBits(LED_PWR);
-			SetTimer(3, TIMER_1_SEC);
+			SetTimer(1, TIMER_1_SEC);
 		}
 		if (ev == pwrbtn_on) {
 			GPIO_SetBits(LED_PWR);
-			//GPIO_ResetBits(LED_GOOD);
-			GPIO_SetBits(ENABLE_5V);
+			GPIO_SetBits(ENABLE_5V); // delay between ENABLE_5V and POWER_CPU should be < 200ms
 			GPIO_SetBits(RESET_CPU);
-			SetTimer(1, TIMER_500_MS);
 			SetTimer(0, TIMER_500_MS);
 			
-			SetTimer(2, TIMER_100_MS);
+			SetTimer(2, TIMER_50_MS);
 			SysCntrl.state = WAIT_PGOOD;
 		}
 		break;
 	case WAIT_PGOOD:
-		// if (ev == timer_1){
-		// 	SysCntrl.state = PWR_ERROR;
-		// }
-		// if (ev == timer_0) {
-		// 	GPIO_ToggleBits(LED_GOOD);
-		// 	SetTimer(0, TIMER_300_MS);
-		// }
 
 		if( ev == timer_2){
 			GPIO_ResetBits(LED_GOOD);
 			GPIO_SetBits(PG_SMARC);
-			SetTimer(2, TIMER_100_MS);
+			SetTimer(2, TIMER_50_MS);
 			SysCntrl.state = WAIT_CARRIER_ON;
 		}
 		
-				
-		// if( ev == pgood_5v){
-		// 	GPIO_ResetBits(LED_GOOD);
-		// 	GPIO_SetBits(PG_SMARC);
-		// 	SysCntrl.state = WAIT_CARRIER_ON;
-		// }
 		break;
 	case WAIT_CARRIER_ON:
-		// if( ev == carrier){
-		// 	GPIO_SetBits(ENABLE_DCDC);
-		// 	SetTimer(2, TIMER_100_MS);
-		// 	SysCntrl.state = CPU_START;
-		// }
 
 		if( ev == timer_2){
 			GPIO_SetBits(ENABLE_DCDC);
-			SetTimer(2, TIMER_100_MS);
+			SetTimer(2, TIMER_50_MS);
 			SysCntrl.state = CPU_START;
 		}
 		break;
 	case CPU_START:
 		if (ev == timer_2){
-			GPIO_SetBits(POWER_CPU);
+			GPIO_SetBits(POWER_CPU); // delay between ENABLE_5V and POWER_CPU should be < 200ms
 			GPIO_SetBits(LED_PWR);
-			SetTimer(2, TIMER_100_MS);
+			SetTimer(2, TIMER_50_MS); 
 			SysCntrl.state = CPU_NO_RST;
 		}
 		break;
@@ -191,26 +164,6 @@ void ReadInputGpio() {
 		tick(carrier);
 	}
 
-	// bt |= ((GPIO_ReadInputDataBit(PWR_BTN)) ? 0:1) << B_PWR_MASK;
-		
-	// bt |= ((GPIO_ReadInputDataBit(PG_5V))? 1:0) << B_PG_5V_MASK;
-	
-	// bt |= ((GPIO_ReadInputDataBit(PG_SMARC))? 1:0) << B_PG_SMARC_MASK;
-		
-	// SysCntrl.InputReg = bt;
-
-	// if ( (SysCntrl.InputReg >> B_PWR_MASK) & 1){
-	// 	//tick(pwrbtn);
-	// 	GPIO_ToggleBits(LED_PWR);
-	// }
-
-	// if (SysCntrl.InputReg & B_PG_5V_MASK){
-	// 	tick(pgood_5v);
-	// }
-
-	// if (SysCntrl.InputReg & B_PG_SMARC_MASK){
-	// 	tick(pgood_smarc);
-	// }
 }
 
 
@@ -222,46 +175,36 @@ void TimerMatch()
 	bMainTimer = 0;
 	SysCntrl.Timer++;
 
-	if (SysCntrl.Timer_0) {
+	//LED_PWR
+	if (SysCntrl.Timer_0) { 
 		SysCntrl.Timer_0--;
 		if (!SysCntrl.Timer_0) {
 			tick(timer_0);
 		}
 	}
-	if (SysCntrl.Timer_1) {
+
+	//PWR_BTN
+	if (SysCntrl.Timer_1) { 
 		SysCntrl.Timer_1--;
 		if (!SysCntrl.Timer_1) {
 			tick(timer_1);
 		}
 	}
+
+	//system start
 	if (SysCntrl.Timer_2) {
 		SysCntrl.Timer_2--;
 		if (!SysCntrl.Timer_2) {
 			tick(timer_2);
 		}
 	}
-	if (SysCntrl.Timer_3) {
-		SysCntrl.Timer_3--;
-		if (!SysCntrl.Timer_3) {
-			tick(timer_3);
-		}
-	}
 }
 
-//#pragma vector=27
-//__interrupt 
-// void TIM4_UPD_OVF_IRQHandler(void)
-// {
-// 	bMainTimer = 1;
-// 	GPIO_ToggleBits(LED_GOOD);
-// 	TIM4_ClearFlag(TIM4_FLAG_Update);
-// }
 
 
 INTERRUPT_HANDLER(IRQ_Handler_TIM4, 25)
 {
 	bMainTimer = 1;
-	//GPIO_ToggleBits(LED_GOOD);
 	TIM4_ClearITPendingBit(TIM4_IT_Update);
 }
 
@@ -296,11 +239,7 @@ int main( void )
 	CLK_PeripheralClockConfig(CLK_Peripheral_USART1, ENABLE);
 	// ---------- TIM4 Init -----------------------------
 	TIM4_DeInit();
-	// TIM4_TimeBaseInit(TIM4_Prescaler_1024, 156);
-	// TIM4_ClearFlag(TIM4_FLAG_UPDATE);
-	// TIM4_UpdateRequestConfig(TIM4_UpdateSource_Global);
-	// TIM4_ITConfig(TIM4_IT_Update, ENABLE);
-	// TIM4_Cmd(ENABLE);
+
 	TIM4_Cmd(DISABLE); 
 	TIM4_TimeBaseInit(TIM4_Prescaler_1024, 156);
     TIM4_ClearFlag(TIM4_FLAG_Update);
@@ -310,7 +249,6 @@ int main( void )
 
 	//timers
 	bMainTimer = 0;
-	//GPIO_SetBits(LED_PWR);
 	SysCntrl.btn_state = SET;
 	SysCntrl.btn_state_prev = SET;
 	SysCntrl.btn_change_time = 0;

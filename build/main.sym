@@ -16,8 +16,8 @@ Symbol Table
     _GPIO_ResetBits                                                ****** GX
     _GPIO_SetBits                                                  ****** GX
     _GPIO_ToggleBits                                               ****** GX
-  A _IRQ_Handler_TIM4                                              00031A GR
-  A _ReadInputGpio                                                 000217 GR
+  A _IRQ_Handler_TIM4                                              000262 GR
+  A _ReadInputGpio                                                 000199 GR
   A _SetTimer                                                      000000 GR
   1 _SysCntrl                                                      000001 GR
     _TIM4_ClearFlag                                                ****** GX
@@ -26,15 +26,14 @@ Symbol Table
     _TIM4_DeInit                                                   ****** GX
     _TIM4_ITConfig                                                 ****** GX
     _TIM4_TimeBaseInit                                             ****** GX
-  A _TimerMatch                                                    0002AC GR
+  A _TimerMatch                                                    000219 GR
   5 __interrupt_vect                                               000000 R
-  6 __sdcc_gs_init_startup                                         000000 R
   6 __sdcc_init_data                                               000000 R
   5 __sdcc_program_startup                                         000070 R
   3 __start__stack                                                 000000 R
   1 _bMainTimer                                                    000000 GR
-  A _main                                                          000327 GR
-  A _tick                                                          000034 GR
+  A _main                                                          00026E GR
+  A _tick                                                          000019 GR
     l_DATA                                                         ****** GX
     l_INITIALIZER                                                  ****** GX
     s_DATA                                                         ****** GX
@@ -58,6 +57,6 @@ Area Table
    7 GSFINAL                                    size      3   flags    0
    8 CONST                                      size      0   flags    0
    9 INITIALIZER                                size      0   flags    0
-   A CODE                                       size    456   flags    0
+   A CODE                                       size    359   flags    0
    B CABS                                       size      0   flags    8
 

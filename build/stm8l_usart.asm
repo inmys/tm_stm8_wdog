@@ -1,6 +1,6 @@
 ;--------------------------------------------------------
 ; File Created by SDCC : free open source ANSI-C Compiler
-; Version 4.0.0 #11528 (Linux)
+; Version 4.2.0 #13081 (Linux)
 ;--------------------------------------------------------
 	.module stm8l_usart
 	.optsdcc -mstm8
@@ -76,11 +76,8 @@
 ;	 function USART_DeInit
 ;	-----------------------------------------
 _USART_DeInit:
-;	libs/stm8l_usart.c: 153: (void) USARTx->SR;
-	ldw	y, (0x03, sp)
-	ld	a, (y)
 ;	libs/stm8l_usart.c: 154: (void) USARTx->DR;
-	ldw	x, y
+	ldw	y, x
 	ld	a, (0x1, x)
 ;	libs/stm8l_usart.c: 156: USARTx->BRR2 = USART_BRR2_RESET_VALUE;  /* Set USART_BRR2 to reset value 0x00 */
 	ldw	x, y
@@ -111,22 +108,20 @@ _USART_DeInit:
 _USART_Init:
 	sub	sp, #11
 ;	libs/stm8l_usart.c: 210: USARTx->CR1 &= (uint8_t)(~(USART_CR1_PCEN | USART_CR1_PS | USART_CR1_M));
-	ldw	y, (0x0e, sp)
-	ldw	(0x01, sp), y
-	ldw	x, y
+	ldw	(0x0a, sp), x
 	addw	x, #0x0004
 	ld	a, (x)
 	and	a, #0xe9
-	ld	(0x0b, sp), a
+	ld	(0x09, sp), a
 	ld	(x), a
 ;	libs/stm8l_usart.c: 213: USARTx->CR1 |= (uint8_t)((uint8_t)USART_WordLength | (uint8_t)USART_Parity);
 	ld	a, (x)
-	ld	a, (0x14, sp)
-	or	a, (0x16, sp)
-	or	a, (0x0b, sp)
+	ld	a, (0x12, sp)
+	or	a, (0x14, sp)
+	or	a, (0x09, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 216: USARTx->CR3 &= (uint8_t)(~USART_CR3_STOP);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x0a, sp)
 	addw	x, #0x0006
 	ld	a, (x)
 	and	a, #0xcf
@@ -135,71 +130,68 @@ _USART_Init:
 	push	a
 	ld	a, (x)
 	pop	a
-	or	a, (0x15, sp)
+	or	a, (0x13, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 221: USARTx->BRR1 &= (uint8_t)(~USART_BRR1_DIVM);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x0a, sp)
 	incw	x
 	incw	x
-	ldw	(0x03, sp), x
+	ldw	(0x01, sp), x
 	ld	a, (x)
-	ldw	x, (0x03, sp)
+	ldw	x, (0x01, sp)
 	clr	(x)
 ;	libs/stm8l_usart.c: 223: USARTx->BRR2 &= (uint8_t)(~USART_BRR2_DIVM);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x0a, sp)
 	addw	x, #0x0003
-	ldw	(0x05, sp), x
+	ldw	(0x03, sp), x
 	ld	a, (x)
 	and	a, #0x0f
-	ldw	x, (0x05, sp)
+	ldw	x, (0x03, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 225: USARTx->BRR2 &= (uint8_t)(~USART_BRR2_DIVF);
-	ldw	x, (0x05, sp)
+	ldw	x, (0x03, sp)
 	push	a
 	ld	a, (x)
 	pop	a
 	and	a, #0xf0
-	ldw	x, (0x05, sp)
+	ldw	x, (0x03, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 227: BaudRate_Mantissa  = (uint32_t)(CLK_GetClockFreq() / BaudRate );
 	call	_CLK_GetClockFreq
-	ldw	(0x0a, sp), x
-	ldw	x, (0x12, sp)
+	ldw	(0x08, sp), x
+	ldw	x, (0x10, sp)
 	pushw	x
-	ldw	x, (0x12, sp)
+	ldw	x, (0x10, sp)
 	pushw	x
-	ldw	x, (0x0e, sp)
+	ldw	x, (0x0c, sp)
 	pushw	x
 	pushw	y
 	call	__divulong
 	addw	sp, #8
-	ldw	(0x09, sp), x
-	ldw	(0x07, sp), y
+	ldw	(0x05, sp), y
 ;	libs/stm8l_usart.c: 229: USARTx->BRR2 = (uint8_t)((BaudRate_Mantissa >> (uint8_t)8) & (uint8_t)0xF0);
-	ldw	y, (0x09, sp)
-	ld	a, yh
+	ld	a, xh
 	and	a, #0xf0
-	ld	(0x0b, sp), a
-	ldw	x, (0x05, sp)
-	ld	a, (0x0b, sp)
-	ld	(x), a
+	ld	(0x09, sp), a
+	ldw	y, (0x03, sp)
+	ld	a, (0x09, sp)
+	ld	(y), a
 ;	libs/stm8l_usart.c: 231: USARTx->BRR2 |= (uint8_t)(BaudRate_Mantissa & (uint8_t)0x0F);
-	ldw	x, (0x05, sp)
-	ld	a, (x)
-	ld	a, (0x0a, sp)
+	ldw	y, (0x03, sp)
+	ld	a, (y)
+	ld	a, xl
 	and	a, #0x0f
-	or	a, (0x0b, sp)
-	ldw	x, (0x05, sp)
-	ld	(x), a
+	or	a, (0x09, sp)
+	ldw	y, (0x03, sp)
+	ld	(y), a
 ;	libs/stm8l_usart.c: 233: USARTx->BRR1 = (uint8_t)(BaudRate_Mantissa >> (uint8_t)4);
-	ldw	x, y
 	ld	a, #0x10
 	div	x, a
 	ld	a, xl
-	ldw	x, (0x03, sp)
+	ldw	x, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 236: USARTx->CR2 &= (uint8_t)~(USART_CR2_TEN | USART_CR2_REN);
-	ldw	x, (0x01, sp)
+	ldw	x, (0x0a, sp)
 	addw	x, #0x0005
 	ld	a, (x)
 	and	a, #0xf3
@@ -208,69 +200,82 @@ _USART_Init:
 	push	a
 	ld	a, (x)
 	pop	a
-	or	a, (0x17, sp)
+	or	a, (0x15, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 239: }
-	addw	sp, #11
-	ret
+	ldw	x, (12, sp)
+	addw	sp, #21
+	jp	(x)
 ;	libs/stm8l_usart.c: 264: void USART_ClockInit(USART_TypeDef* USARTx, USART_Clock_TypeDef USART_Clock,
 ;	-----------------------------------------
 ;	 function USART_ClockInit
 ;	-----------------------------------------
 _USART_ClockInit:
-	push	a
+	sub	sp, #4
+	ld	(0x04, sp), a
 ;	libs/stm8l_usart.c: 275: USARTx->CR3 &= (uint8_t)~(USART_CR3_CPOL | USART_CR3_CPHA | USART_CR3_LBCL);
-	ldw	x, (0x04, sp)
 	addw	x, #0x0006
+	ldw	(0x01, sp), x
 	ld	a, (x)
 	and	a, #0xf8
-	ld	(0x01, sp), a
+	ld	(0x03, sp), a
+	ldw	x, (0x01, sp)
+	ld	a, (0x03, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 277: USARTx->CR3 |= (uint8_t)((uint8_t)((uint8_t)(USART_CPOL | (uint8_t)USART_CPHA ) | USART_LastBit));
+	ldw	x, (0x01, sp)
 	ld	a, (x)
 	ld	a, (0x07, sp)
 	or	a, (0x08, sp)
 	or	a, (0x09, sp)
-	or	a, (0x01, sp)
+	or	a, (0x03, sp)
+	ldw	x, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 275: USARTx->CR3 &= (uint8_t)~(USART_CR3_CPOL | USART_CR3_CPHA | USART_CR3_LBCL);
+	ldw	x, (0x01, sp)
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 279: if (USART_Clock != USART_Clock_Disable)
-	tnz	(0x06, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 281: USARTx->CR3 |= (uint8_t)(USART_CR3_CLKEN); /* Set the Clock Enable bit */
 	or	a, #0x08
+	ldw	x, (0x01, sp)
 	ld	(x), a
 	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 285: USARTx->CR3 &= (uint8_t)(~USART_CR3_CLKEN); /* Clear the Clock Enable bit */
 	and	a, #0xf7
+	ldw	x, (0x01, sp)
 	ld	(x), a
 00104$:
 ;	libs/stm8l_usart.c: 287: }
-	pop	a
-	ret
+	ldw	x, (5, sp)
+	addw	sp, #9
+	jp	(x)
 ;	libs/stm8l_usart.c: 296: void USART_Cmd(USART_TypeDef* USARTx, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_Cmd
 ;	-----------------------------------------
 _USART_Cmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 300: USARTx->CR1 &= (uint8_t)(~USART_CR1_USARTD); /**< USART Enable */
-	ldw	x, (0x03, sp)
 	addw	x, #0x0004
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 298: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 300: USARTx->CR1 &= (uint8_t)(~USART_CR1_USARTD); /**< USART Enable */
 	and	a, #0xdf
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 304: USARTx->CR1 |= USART_CR1_USARTD;  /**< USART Disable (for low power consumption) */
 	or	a, #0x20
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 306: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 329: void USART_SetPrescaler(USART_TypeDef* USARTx, uint8_t USART_Prescaler)
 ;	-----------------------------------------
@@ -278,9 +283,8 @@ _USART_Cmd:
 ;	-----------------------------------------
 _USART_SetPrescaler:
 ;	libs/stm8l_usart.c: 332: USARTx->PSCR = USART_Prescaler;
-	ldw	x, (0x03, sp)
-	ld	a, (0x05, sp)
-	ld	(0x000a, x), a
+	addw	x, #0x000a
+	ld	(x), a
 ;	libs/stm8l_usart.c: 333: }
 	ret
 ;	libs/stm8l_usart.c: 340: void USART_SendBreak(USART_TypeDef* USARTx)
@@ -289,7 +293,6 @@ _USART_SetPrescaler:
 ;	-----------------------------------------
 _USART_SendBreak:
 ;	libs/stm8l_usart.c: 342: USARTx->CR2 |= USART_CR2_SBK;
-	ldw	x, (0x03, sp)
 	addw	x, #0x0005
 	ld	a, (x)
 	or	a, #0x01
@@ -302,7 +305,6 @@ _USART_SendBreak:
 ;	-----------------------------------------
 _USART_ReceiveData8:
 ;	libs/stm8l_usart.c: 384: return USARTx->DR;
-	ldw	x, (0x03, sp)
 	ld	a, (0x1, x)
 ;	libs/stm8l_usart.c: 385: }
 	ret
@@ -313,8 +315,7 @@ _USART_ReceiveData8:
 _USART_ReceiveData9:
 	sub	sp, #2
 ;	libs/stm8l_usart.c: 396: temp = ((uint16_t)(((uint16_t)((uint16_t)USARTx->CR1 & (uint16_t)USART_CR1_R8)) << 1));
-	ldw	y, (0x05, sp)
-	ldw	x, y
+	ldw	y, x
 	ld	a, (0x4, x)
 	and	a, #0x80
 	ld	xl, a
@@ -339,9 +340,7 @@ _USART_ReceiveData9:
 ;	-----------------------------------------
 _USART_SendData8:
 ;	libs/stm8l_usart.c: 408: USARTx->DR = Data;
-	ldw	x, (0x03, sp)
 	incw	x
-	ld	a, (0x05, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 409: }
 	ret
@@ -352,8 +351,7 @@ _USART_SendData8:
 _USART_SendData9:
 	sub	sp, #3
 ;	libs/stm8l_usart.c: 423: USARTx->CR1 &= ((uint8_t)~USART_CR1_T8);
-	ldw	y, (0x06, sp)
-	ldw	x, y
+	ldw	(0x02, sp), x
 	addw	x, #0x0004
 	ld	a, (x)
 	and	a, #0xbf
@@ -361,53 +359,55 @@ _USART_SendData9:
 	ld	(x), a
 ;	libs/stm8l_usart.c: 426: USARTx->CR1 |= (uint8_t)(((uint8_t)(Data >> 2)) & USART_CR1_T8);
 	ld	a, (x)
-	ld	a, (0x08, sp)
-	ld	(0x02, sp), a
-	ld	a, (0x09, sp)
-	srl	(0x02, sp)
-	rrc	a
-	srl	(0x02, sp)
-	rrc	a
+	ldw	y, (0x06, sp)
+	srlw	y
+	srlw	y
+	ld	a, yl
 	and	a, #0x40
 	or	a, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 429: USARTx->DR   = (uint8_t)(Data);
-	ldw	x, y
+	ldw	x, (0x02, sp)
 	incw	x
-	ld	a, (0x09, sp)
+	ld	a, (0x07, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 430: }
-	addw	sp, #3
-	ret
+	ldw	x, (4, sp)
+	addw	sp, #7
+	jp	(x)
 ;	libs/stm8l_usart.c: 473: void USART_ReceiverWakeUpCmd(USART_TypeDef* USARTx, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_ReceiverWakeUpCmd
 ;	-----------------------------------------
 _USART_ReceiverWakeUpCmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 480: USARTx->CR2 |= USART_CR2_RWU;
-	ldw	x, (0x03, sp)
 	addw	x, #0x0005
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 477: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 480: USARTx->CR2 |= USART_CR2_RWU;
 	or	a, #0x02
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 485: USARTx->CR2 &= ((uint8_t)~USART_CR2_RWU);
 	and	a, #0xfd
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 487: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 496: void USART_SetAddress(USART_TypeDef* USARTx, uint8_t USART_Address)
 ;	-----------------------------------------
 ;	 function USART_SetAddress
 ;	-----------------------------------------
 _USART_SetAddress:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 502: USARTx->CR4 &= ((uint8_t)~USART_CR4_ADD);
-	ldw	x, (0x03, sp)
 	addw	x, #0x0007
 	ld	a, (x)
 	and	a, #0xf0
@@ -416,17 +416,19 @@ _USART_SetAddress:
 	push	a
 	ld	a, (x)
 	pop	a
-	or	a, (0x05, sp)
+	or	a, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 505: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 515: void USART_WakeUpConfig(USART_TypeDef* USARTx, USART_WakeUp_TypeDef USART_WakeUp)
 ;	-----------------------------------------
 ;	 function USART_WakeUpConfig
 ;	-----------------------------------------
 _USART_WakeUpConfig:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 519: USARTx->CR1 &= ((uint8_t)~USART_CR1_WAKE);
-	ldw	x, (0x03, sp)
 	addw	x, #0x0004
 	ld	a, (x)
 	and	a, #0xf7
@@ -435,75 +437,85 @@ _USART_WakeUpConfig:
 	push	a
 	ld	a, (x)
 	pop	a
-	or	a, (0x05, sp)
+	or	a, (0x01, sp)
 	ld	(x), a
 ;	libs/stm8l_usart.c: 521: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 566: void USART_HalfDuplexCmd(USART_TypeDef* USARTx, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_HalfDuplexCmd
 ;	-----------------------------------------
 _USART_HalfDuplexCmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 572: USARTx->CR5 |= USART_CR5_HDSEL;  /**< USART Half Duplex Enable  */
-	ldw	x, (0x03, sp)
 	addw	x, #0x0008
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 570: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 572: USARTx->CR5 |= USART_CR5_HDSEL;  /**< USART Half Duplex Enable  */
 	or	a, #0x08
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 576: USARTx->CR5 &= (uint8_t)~USART_CR5_HDSEL; /**< USART Half Duplex Disable */
 	and	a, #0xf7
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 578: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 644: void USART_SmartCardCmd(USART_TypeDef* USARTx, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_SmartCardCmd
 ;	-----------------------------------------
 _USART_SmartCardCmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 651: USARTx->CR5 |= USART_CR5_SCEN;
-	ldw	x, (0x03, sp)
 	addw	x, #0x0008
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 648: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 651: USARTx->CR5 |= USART_CR5_SCEN;
 	or	a, #0x20
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 656: USARTx->CR5 &= ((uint8_t)(~USART_CR5_SCEN));
 	and	a, #0xdf
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 658: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 667: void USART_SmartCardNACKCmd(USART_TypeDef* USARTx, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_SmartCardNACKCmd
 ;	-----------------------------------------
 _USART_SmartCardNACKCmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 674: USARTx->CR5 |= USART_CR5_NACK;
-	ldw	x, (0x03, sp)
 	addw	x, #0x0008
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 671: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 674: USARTx->CR5 |= USART_CR5_NACK;
 	or	a, #0x10
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 679: USARTx->CR5 &= ((uint8_t)~(USART_CR5_NACK));
 	and	a, #0xef
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 681: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 690: void USART_SetGuardTime(USART_TypeDef* USARTx, uint8_t USART_GuardTime)
 ;	-----------------------------------------
@@ -511,9 +523,8 @@ _USART_SmartCardNACKCmd:
 ;	-----------------------------------------
 _USART_SetGuardTime:
 ;	libs/stm8l_usart.c: 693: USARTx->GTR = USART_GuardTime;
-	ldw	x, (0x03, sp)
-	ld	a, (0x05, sp)
-	ld	(0x0009, x), a
+	addw	x, #0x0009
+	ld	(x), a
 ;	libs/stm8l_usart.c: 694: }
 	ret
 ;	libs/stm8l_usart.c: 751: void USART_IrDAConfig(USART_TypeDef* USARTx, USART_IrDAMode_TypeDef USART_IrDAMode)
@@ -521,44 +532,50 @@ _USART_SetGuardTime:
 ;	 function USART_IrDAConfig
 ;	-----------------------------------------
 _USART_IrDAConfig:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 757: USARTx->CR5 |= USART_CR5_IRLP;
-	ldw	x, (0x03, sp)
 	addw	x, #0x0008
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 755: if (USART_IrDAMode != USART_IrDAMode_Normal)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 757: USARTx->CR5 |= USART_CR5_IRLP;
 	or	a, #0x04
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 761: USARTx->CR5 &= ((uint8_t)~USART_CR5_IRLP);
 	and	a, #0xfb
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 763: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 772: void USART_IrDACmd(USART_TypeDef* USARTx, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_IrDACmd
 ;	-----------------------------------------
 _USART_IrDACmd:
+	push	a
+	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 781: USARTx->CR5 |= USART_CR5_IREN;
-	ldw	x, (0x03, sp)
 	addw	x, #0x0008
 	ld	a, (x)
 ;	libs/stm8l_usart.c: 778: if (NewState != DISABLE)
-	tnz	(0x05, sp)
+	tnz	(0x01, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 781: USARTx->CR5 |= USART_CR5_IREN;
 	or	a, #0x02
 	ld	(x), a
-	ret
+	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 786: USARTx->CR5 &= ((uint8_t)~USART_CR5_IREN);
 	and	a, #0xfd
 	ld	(x), a
+00104$:
 ;	libs/stm8l_usart.c: 788: }
+	pop	a
 	ret
 ;	libs/stm8l_usart.c: 818: void USART_DMACmd(USART_TypeDef* USARTx, USART_DMAReq_TypeDef USART_DMAReq,
 ;	-----------------------------------------
@@ -567,35 +584,36 @@ _USART_IrDACmd:
 _USART_DMACmd:
 	push	a
 ;	libs/stm8l_usart.c: 829: USARTx->CR5 |= (uint8_t) USART_DMAReq;
-	ldw	x, (0x04, sp)
 	addw	x, #0x0008
+	push	a
 	ld	a, (x)
+	ld	(0x02, sp), a
+	pop	a
 ;	libs/stm8l_usart.c: 825: if (NewState != DISABLE)
-	tnz	(0x07, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 829: USARTx->CR5 |= (uint8_t) USART_DMAReq;
-	or	a, (0x06, sp)
+	or	a, (0x01, sp)
 	ld	(x), a
 	jra	00104$
 00102$:
 ;	libs/stm8l_usart.c: 835: USARTx->CR5 &= (uint8_t)~USART_DMAReq;
-	push	a
-	ld	a, (0x07, sp)
 	cpl	a
-	ld	(0x02, sp), a
-	pop	a
 	and	a, (0x01, sp)
 	ld	(x), a
 00104$:
 ;	libs/stm8l_usart.c: 837: }
 	pop	a
-	ret
+	popw	x
+	pop	a
+	jp	(x)
 ;	libs/stm8l_usart.c: 939: void USART_ITConfig(USART_TypeDef* USARTx, USART_IT_TypeDef USART_IT, FunctionalState NewState)
 ;	-----------------------------------------
 ;	 function USART_ITConfig
 ;	-----------------------------------------
 _USART_ITConfig:
-	sub	sp, #7
+	sub	sp, #9
+	ldw	(0x08, sp), x
 ;	libs/stm8l_usart.c: 946: usartreg = (uint8_t)((uint16_t)USART_IT >> 0x08);
 	ldw	x, (0x0c, sp)
 ;	libs/stm8l_usart.c: 948: itpos = (uint8_t)((uint8_t)1 << (uint8_t)((uint8_t)USART_IT & (uint8_t)0x0F));
@@ -623,27 +641,26 @@ _USART_ITConfig:
 	clr	(0x01, sp)
 00147$:
 ;	libs/stm8l_usart.c: 955: USARTx->CR1 |= itpos;
-	ldw	y, (0x0a, sp)
+	ldw	y, (0x08, sp)
+	addw	y, #0x0004
+	ldw	(0x02, sp), y
 ;	libs/stm8l_usart.c: 957: else if (usartreg == 0x05)
 	ld	a, xh
 	sub	a, #0x05
 	jrne	00149$
 	inc	a
-	ld	(0x02, sp), a
+	ld	(0x04, sp), a
 	.byte 0xc5
 00149$:
-	clr	(0x02, sp)
+	clr	(0x04, sp)
 00150$:
-;	libs/stm8l_usart.c: 955: USARTx->CR1 |= itpos;
-	ldw	x, y
-	addw	x, #0x0004
-	ldw	(0x03, sp), x
 ;	libs/stm8l_usart.c: 959: USARTx->CR5 |= itpos;
-	ldw	x, y
+	ldw	x, (0x08, sp)
 	addw	x, #0x0008
+	ldw	(0x05, sp), x
 ;	libs/stm8l_usart.c: 964: USARTx->CR2 |= itpos;
-	addw	y, #0x0005
-	ldw	(0x05, sp), y
+	ldw	x, (0x08, sp)
+	addw	x, #0x0005
 ;	libs/stm8l_usart.c: 950: if (NewState != DISABLE)
 	tnz	(0x0e, sp)
 	jreq	00114$
@@ -651,27 +668,27 @@ _USART_ITConfig:
 	tnz	(0x01, sp)
 	jreq	00105$
 ;	libs/stm8l_usart.c: 955: USARTx->CR1 |= itpos;
-	ldw	x, (0x03, sp)
+	ldw	x, (0x02, sp)
 	ld	a, (x)
 	or	a, (0x07, sp)
-	ldw	x, (0x03, sp)
+	ldw	x, (0x02, sp)
 	ld	(x), a
 	jra	00116$
 00105$:
 ;	libs/stm8l_usart.c: 957: else if (usartreg == 0x05)
-	tnz	(0x02, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 ;	libs/stm8l_usart.c: 959: USARTx->CR5 |= itpos;
+	ldw	x, (0x05, sp)
 	ld	a, (x)
 	or	a, (0x07, sp)
+	ldw	x, (0x05, sp)
 	ld	(x), a
 	jra	00116$
 00102$:
 ;	libs/stm8l_usart.c: 964: USARTx->CR2 |= itpos;
-	ldw	x, (0x05, sp)
 	ld	a, (x)
 	or	a, (0x07, sp)
-	ldw	x, (0x05, sp)
 	ld	(x), a
 	jra	00116$
 00114$:
@@ -681,32 +698,33 @@ _USART_ITConfig:
 	tnz	(0x01, sp)
 	jreq	00111$
 ;	libs/stm8l_usart.c: 972: USARTx->CR1 &= (uint8_t)(~itpos);
-	ldw	x, (0x03, sp)
+	ldw	x, (0x02, sp)
 	ld	a, (x)
 	and	a, (0x07, sp)
-	ldw	x, (0x03, sp)
+	ldw	x, (0x02, sp)
 	ld	(x), a
 	jra	00116$
 00111$:
 ;	libs/stm8l_usart.c: 974: else if (usartreg == 0x05)
-	tnz	(0x02, sp)
+	tnz	(0x04, sp)
 	jreq	00108$
 ;	libs/stm8l_usart.c: 976: USARTx->CR5 &= (uint8_t)(~itpos);
+	ldw	x, (0x05, sp)
 	ld	a, (x)
 	and	a, (0x07, sp)
+	ldw	x, (0x05, sp)
 	ld	(x), a
 	jra	00116$
 00108$:
 ;	libs/stm8l_usart.c: 981: USARTx->CR2 &= (uint8_t)(~itpos);
-	ldw	x, (0x05, sp)
 	ld	a, (x)
 	and	a, (0x07, sp)
-	ldw	x, (0x05, sp)
 	ld	(x), a
 00116$:
 ;	libs/stm8l_usart.c: 984: }
-	addw	sp, #7
-	ret
+	ldw	x, (10, sp)
+	addw	sp, #14
+	jp	(x)
 ;	libs/stm8l_usart.c: 1002: FlagStatus USART_GetFlagStatus(USART_TypeDef* USARTx, USART_FLAG_TypeDef USART_FLAG)
 ;	-----------------------------------------
 ;	 function USART_GetFlagStatus
@@ -714,10 +732,9 @@ _USART_ITConfig:
 _USART_GetFlagStatus:
 	push	a
 ;	libs/stm8l_usart.c: 1009: if (USART_FLAG == USART_FLAG_SBK)
-	ldw	y, (0x06, sp)
+	ldw	y, (0x04, sp)
 ;	libs/stm8l_usart.c: 1011: if ((USARTx->CR2 & (uint8_t)USART_FLAG) != (uint8_t)0x00)
-	ldw	x, (0x04, sp)
-	ld	a, (0x07, sp)
+	ld	a, (0x05, sp)
 	ld	(0x01, sp), a
 ;	libs/stm8l_usart.c: 1009: if (USART_FLAG == USART_FLAG_SBK)
 	cpw	y, #0x0101
@@ -747,8 +764,9 @@ _USART_GetFlagStatus:
 00109$:
 ;	libs/stm8l_usart.c: 1036: return status;
 ;	libs/stm8l_usart.c: 1037: }
-	addw	sp, #1
-	ret
+	ldw	x, (2, sp)
+	addw	sp, #5
+	jp	(x)
 ;	libs/stm8l_usart.c: 1060: void USART_ClearFlag(USART_TypeDef* USARTx, USART_FLAG_TypeDef USART_FLAG)
 ;	-----------------------------------------
 ;	 function USART_ClearFlag
@@ -756,30 +774,32 @@ _USART_GetFlagStatus:
 _USART_ClearFlag:
 ;	libs/stm8l_usart.c: 1065: USARTx->SR = (uint8_t)((uint16_t)~((uint16_t)USART_FLAG));
 	ldw	y, (0x03, sp)
-	ldw	x, (0x05, sp)
-	cplw	x
-	ld	a, xl
-	ld	(y), a
+	cplw	y
+	ld	a, yl
+	ld	(x), a
 ;	libs/stm8l_usart.c: 1066: }
-	ret
+	ldw	x, (1, sp)
+	addw	sp, #4
+	jp	(x)
 ;	libs/stm8l_usart.c: 1083: ITStatus USART_GetITStatus(USART_TypeDef* USARTx, USART_IT_TypeDef USART_IT)
 ;	-----------------------------------------
 ;	 function USART_GetITStatus
 ;	-----------------------------------------
 _USART_GetITStatus:
 	sub	sp, #6
+	ldw	(0x05, sp), x
 ;	libs/stm8l_usart.c: 1096: itpos = (uint8_t)((uint8_t)1 << (uint8_t)((uint8_t)USART_IT & (uint8_t)0x0F));
-	ld	a, (0x0c, sp)
+	ld	a, (0x0a, sp)
 	ld	xl, a
 	and	a, #0x0f
 	push	a
 	ld	a, #0x01
-	ld	(0x07, sp), a
+	ld	(0x05, sp), a
 	pop	a
 	tnz	a
 	jreq	00163$
 00162$:
-	sll	(0x06, sp)
+	sll	(0x04, sp)
 	dec	a
 	jrne	00162$
 00163$:
@@ -800,27 +820,25 @@ _USART_GetITStatus:
 	jrne	00164$
 00165$:
 ;	libs/stm8l_usart.c: 1103: if (USART_IT == USART_IT_PE)
-	ldw	y, (0x0b, sp)
-	ldw	(0x02, sp), y
-;	libs/stm8l_usart.c: 1106: enablestatus = (uint8_t)((uint8_t)USARTx->CR1 & itmask2);
 	ldw	y, (0x09, sp)
+	ldw	(0x02, sp), y
 ;	libs/stm8l_usart.c: 1109: if (((USARTx->SR & itpos) != (uint8_t)0x00) && enablestatus)
-	ldw	(0x04, sp), y
-	ldw	x, y
+	ldw	x, (0x05, sp)
 	ld	a, (x)
-	and	a, (0x06, sp)
-	ld	(0x06, sp), a
+	and	a, (0x04, sp)
+	ld	(0x04, sp), a
 ;	libs/stm8l_usart.c: 1103: if (USART_IT == USART_IT_PE)
 	ldw	x, (0x02, sp)
 	cpw	x, #0x0100
 	jrne	00118$
 ;	libs/stm8l_usart.c: 1106: enablestatus = (uint8_t)((uint8_t)USARTx->CR1 & itmask2);
-	ldw	x, (0x04, sp)
+	ldw	y, (0x05, sp)
+	ldw	(0x02, sp), y
+	ldw	x, y
 	ld	a, (0x4, x)
-	ld	(0x03, sp), a
 	and	a, (0x01, sp)
 ;	libs/stm8l_usart.c: 1109: if (((USARTx->SR & itpos) != (uint8_t)0x00) && enablestatus)
-	tnz	(0x06, sp)
+	tnz	(0x04, sp)
 	jreq	00102$
 	tnz	a
 	jreq	00102$
@@ -833,7 +851,7 @@ _USART_GetITStatus:
 	jra	00119$
 00118$:
 ;	libs/stm8l_usart.c: 1124: enablestatus = (uint8_t)((uint8_t)USARTx->CR2 & itmask2);
-	ldw	x, (0x04, sp)
+	ldw	x, (0x05, sp)
 	ld	a, (0x5, x)
 	and	a, (0x01, sp)
 ;	libs/stm8l_usart.c: 1121: else if (USART_IT == USART_IT_OR)
@@ -843,11 +861,11 @@ _USART_GetITStatus:
 ;	libs/stm8l_usart.c: 1124: enablestatus = (uint8_t)((uint8_t)USARTx->CR2 & itmask2);
 	ld	(0x03, sp), a
 ;	libs/stm8l_usart.c: 1127: temp = (uint8_t)(USARTx->CR5 & USART_CR5_EIE);
-	ldw	x, (0x04, sp)
+	ldw	x, (0x05, sp)
 	ld	a, (0x8, x)
 	and	a, #0x01
 ;	libs/stm8l_usart.c: 1129: if (( (USARTx->SR & itpos) != 0x00) && ((enablestatus || temp)))
-	tnz	(0x06, sp)
+	tnz	(0x04, sp)
 	jreq	00106$
 	tnz	(0x03, sp)
 	jrne	00105$
@@ -864,7 +882,7 @@ _USART_GetITStatus:
 00115$:
 ;	libs/stm8l_usart.c: 1144: enablestatus = (uint8_t)((uint8_t)USARTx->CR2 & itmask2);
 ;	libs/stm8l_usart.c: 1146: if (((USARTx->SR & itpos) != (uint8_t)0x00) && enablestatus)
-	tnz	(0x06, sp)
+	tnz	(0x04, sp)
 	jreq	00111$
 	tnz	a
 	jreq	00111$
@@ -877,15 +895,15 @@ _USART_GetITStatus:
 00119$:
 ;	libs/stm8l_usart.c: 1159: return  pendingbitstatus;
 ;	libs/stm8l_usart.c: 1160: }
-	addw	sp, #6
-	ret
+	ldw	x, (7, sp)
+	addw	sp, #10
+	jp	(x)
 ;	libs/stm8l_usart.c: 1183: void USART_ClearITPendingBit(USART_TypeDef* USARTx)//, USART_IT_TypeDef USART_IT)
 ;	-----------------------------------------
 ;	 function USART_ClearITPendingBit
 ;	-----------------------------------------
 _USART_ClearITPendingBit:
 ;	libs/stm8l_usart.c: 1188: USARTx->SR &= (uint8_t)(~USART_SR_TC);
-	ldw	x, (0x03, sp)
 	ld	a, (x)
 	and	a, #0xbf
 	ld	(x), a
