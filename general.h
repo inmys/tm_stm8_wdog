@@ -11,6 +11,7 @@
 #define POWER_CPU GPIOB, GPIO_Pin_6
 #define RESET_CPU GPIOB, GPIO_Pin_7
 #define LED_PWR GPIOD, GPIO_Pin_0
+#define SMARC_BOOTMODE GPIOC, GPIO_Pin_5  
 
 #define B_PWR_MASK			(0)
 #define B_PG_5V_MASK		(1)

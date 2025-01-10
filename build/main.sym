@@ -7,6 +7,7 @@ Symbol Table
     .__.ABS.                                                    =  000000 G
     .__.CPU.                                                    =  000000 L
     .__.H$L.                                                    =  000001 L
+  A _BtnAction                                                     0001F0 GR
     _CLK_DeInit                                                    ****** GX
     _CLK_PeripheralClockConfig                                     ****** GX
     _CLK_SYSCLKDivConfig                                           ****** GX
@@ -16,8 +17,8 @@ Symbol Table
     _GPIO_ResetBits                                                ****** GX
     _GPIO_SetBits                                                  ****** GX
     _GPIO_ToggleBits                                               ****** GX
-  A _IRQ_Handler_TIM4                                              000262 GR
-  A _ReadInputGpio                                                 000199 GR
+  A _IRQ_Handler_TIM4                                              0002E6 GR
+  A _ReadInputGpio                                                 00021F GR
   A _SetTimer                                                      000000 GR
   1 _SysCntrl                                                      000001 GR
     _TIM4_ClearFlag                                                ****** GX
@@ -26,13 +27,13 @@ Symbol Table
     _TIM4_DeInit                                                   ****** GX
     _TIM4_ITConfig                                                 ****** GX
     _TIM4_TimeBaseInit                                             ****** GX
-  A _TimerMatch                                                    000219 GR
+  A _TimerMatch                                                    00029D GR
   5 __interrupt_vect                                               000000 R
   6 __sdcc_init_data                                               000000 R
   5 __sdcc_program_startup                                         000070 R
   3 __start__stack                                                 000000 R
   1 _bMainTimer                                                    000000 GR
-  A _main                                                          00026E GR
+  A _main                                                          0002F2 GR
   A _tick                                                          000019 GR
     l_DATA                                                         ****** GX
     l_INITIALIZER                                                  ****** GX
@@ -48,7 +49,7 @@ Hexadecimal [24-Bits]
 Area Table
 
    0 _CODE                                      size      0   flags    0
-   1 DATA                                       size     15   flags    0
+   1 DATA                                       size     17   flags    0
    2 INITIALIZED                                size      0   flags    0
    3 SSEG                                       size      1   flags    0
    4 DABS                                       size      0   flags    8
@@ -57,6 +58,6 @@ Area Table
    7 GSFINAL                                    size      3   flags    0
    8 CONST                                      size      0   flags    0
    9 INITIALIZER                                size      0   flags    0
-   A CODE                                       size    359   flags    0
+   A CODE                                       size    3E7   flags    0
    B CABS                                       size      0   flags    8
 

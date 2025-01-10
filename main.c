@@ -10,8 +10,8 @@
 
 #define PUTCHAR_PROTOTYPE int putchar (int c)
 
-enum state_t { WAIT_PWR_BTN,  POWER_ON_5V, WAIT_PGOOD, WAIT_CARRIER_ON, PWR_ERROR, CPU_START, CPU_NO_RST, WORK_STATE };
-enum event_t { start, timer_0, timer_1, timer_2, pwrbtn_on, pwrbtn_off, pgood_5v, carrier };
+enum state_t { WAIT_PWR_BTN,  POWER_ON_5V, WAIT_PGOOD, WAIT_CARRIER_ON, PWR_ERROR, CPU_START, CPU_NO_RST, CHECK_BOOTMODE, WORK_STATE };
+enum event_t { start, timer_0, timer_1, timer_2, pwrbtn_on, pwrbtn_off, pgood_5v, carrier, cpu_bootrom };
 
 volatile unsigned char bMainTimer;
 struct SysCntrl_t {
@@ -27,7 +27,8 @@ struct SysCntrl_t {
 	unsigned int btn_last_change;
 	unsigned int btn_change_time;
 	unsigned int btn_press_time;
-	
+	uint8_t btn_is_released;
+	uint8_t bootmode;
 
 	uint8_t InputReg;
 	uint8_t fwstate; 
@@ -62,10 +63,20 @@ void tick(enum event_t ev)
 			GPIO_ToggleBits(LED_PWR);
 			SetTimer(1, TIMER_1_SEC);
 		}
+		if (ev == cpu_bootrom){
+			GPIO_SetBits(SMARC_BOOTMODE);
+			SysCntrl.bootmode = 1;
+
+			SetTimer(2, TIMER_1_SEC);
+		}
+		if( ev == timer_2){
+			tick(pwrbtn_on);
+		}
 		if (ev == pwrbtn_on) {
 			GPIO_SetBits(LED_PWR);
 			GPIO_SetBits(ENABLE_5V); // delay between ENABLE_5V and POWER_CPU should be < 200ms
 			GPIO_SetBits(RESET_CPU);
+
 			SetTimer(0, TIMER_500_MS);
 			
 			SetTimer(2, TIMER_50_MS);
@@ -102,21 +113,35 @@ void tick(enum event_t ev)
 		if (ev == timer_2){
 			GPIO_ResetBits(RESET_CPU);
 			GPIO_SetBits(LED_PWR);
-			SetTimer(0, TIMER_1_SEC);
+			SetTimer(2, TIMER_50_MS);
 			SysCntrl.state = WORK_STATE;
 		}
 		break;
+	case CHECK_BOOTMODE:
+		if (ev == timer_2){
+			if(SysCntrl.bootmode == 1){
+				GPIO_ResetBits(SMARC_BOOTMODE);
+				SysCntrl.bootmode = 0;
+			}
+
+			SetTimer(0, TIMER_50_MS);
+			SysCntrl.state = WORK_STATE;
+		}
+
+
+	
 	case WORK_STATE:
 		if (ev == timer_0){
 			GPIO_ToggleBits(LED_GOOD);
 			SetTimer(0, TIMER_1_SEC);
-		}
+		}	
 
 		if (ev == pwrbtn_off){
 			GPIO_ResetBits(POWER_CPU);
 			GPIO_ResetBits(ENABLE_DCDC);
 			GPIO_ResetBits(ENABLE_5V);
 			GPIO_ResetBits(PG_SMARC);
+			GPIO_ResetBits(SMARC_BOOTMODE);
 			GPIO_SetBits(LED_GOOD);
 			SysCntrl.state = WAIT_PWR_BTN;
 			tick(start);
@@ -130,6 +155,24 @@ void tick(enum event_t ev)
 		break;
 	}
 }
+void BtnAction(unsigned int press_time){
+	if(SysCntrl.state == WAIT_PWR_BTN){
+	    if (SysCntrl.btn_press_time >= TIMER_2_SEC){
+			tick(cpu_bootrom);
+			return;
+		}
+		if (SysCntrl.btn_press_time >= TIMER_50_MS){
+			tick(pwrbtn_on);
+			return;
+		}
+	}
+	if(SysCntrl.state == WORK_STATE){
+		if (SysCntrl.btn_press_time >= TIMER_2_SEC){
+			tick(pwrbtn_off);
+			return;
+		}
+	}	
+}
 
 void ReadInputGpio() {
   	uint8_t bt = 0;
@@ -138,24 +181,18 @@ void ReadInputGpio() {
 
 	if (SysCntrl.btn_state != SysCntrl.btn_state_prev){
 		SysCntrl.btn_state_prev = SysCntrl.btn_state;
+		if(SysCntrl.btn_state != RESET){
+			SysCntrl.btn_is_released = 1;
+			SysCntrl.btn_press_time = SysCntrl.btn_change_time - SysCntrl.btn_last_change;
+		}
 		SysCntrl.btn_last_change = SysCntrl.btn_change_time;
 	}
 
-	if (SysCntrl.btn_change_time - SysCntrl.btn_last_change >= TIMER_2_SEC){
-		if (SysCntrl.btn_state == RESET){
-			tick(pwrbtn_off);
-		}
+	if (SysCntrl.btn_is_released == 1){
+		BtnAction(SysCntrl.btn_press_time);
+		SysCntrl.btn_is_released = 0;
 	}
-	else{
-		if (SysCntrl.btn_change_time - SysCntrl.btn_last_change >= TIMER_50_MS)
-		{
-			if (SysCntrl.btn_state == RESET){
-				tick(pwrbtn_on);
-			}
-		}
-	
-	} 
-	
+
 	if( GPIO_ReadInputDataBit(PG_5V) ){
 		tick(pgood_5v);
 	}
@@ -165,7 +202,6 @@ void ReadInputGpio() {
 	}
 
 }
-
 
 void TimerMatch()
 {
@@ -230,6 +266,8 @@ int main( void )
 	GPIO_Init(PG_5V, GPIO_Mode_In_PU_No_IT);
 	GPIO_Init(CARRIER_PWR_ON, GPIO_Mode_In_PU_No_IT);
 	GPIO_Init(WDOG_IN, GPIO_Mode_In_PU_No_IT);
+	GPIO_Init(SMARC_BOOTMODE, GPIO_Mode_Out_PP_Low_Fast);
+
 
 	
 	// ---------- CLK Config -----------------------
