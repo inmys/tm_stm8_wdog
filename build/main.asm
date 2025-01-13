@@ -806,8 +806,8 @@ _main:
 	ldw	x, #(_SysCntrl+11)
 	clr	(0x1, x)
 	clr	(x)
-;	main.c: 295: tick(start);
-	clr	a
+;	main.c: 295: tick(pwrbtn_on);
+	ld	a, #0x04
 	call	_tick
 ;	main.c: 296: while (1) {
 00102$:

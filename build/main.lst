@@ -806,18 +806,18 @@
       0003D4 AEr00r0C         [ 2]  806 	ldw	x, #(_SysCntrl+11)
       0003D7 6F 01            [ 1]  807 	clr	(0x1, x)
       0003D9 7F               [ 1]  808 	clr	(x)
-                                    809 ;	main.c: 295: tick(start);
-      0003DA 4F               [ 1]  810 	clr	a
-      0003DB CDr00r19         [ 4]  811 	call	_tick
+                                    809 ;	main.c: 295: tick(pwrbtn_on);
+      0003DA A6 04            [ 1]  810 	ld	a, #0x04
+      0003DC CDr00r19         [ 4]  811 	call	_tick
                                     812 ;	main.c: 296: while (1) {
-      0003DE                        813 00102$:
+      0003DF                        813 00102$:
                                     814 ;	main.c: 297: ReadInputGpio();
-      0003DE CDr02r1F         [ 4]  815 	call	_ReadInputGpio
+      0003DF CDr02r1F         [ 4]  815 	call	_ReadInputGpio
                                     816 ;	main.c: 298: TimerMatch();
-      0003E1 CDr02r9D         [ 4]  817 	call	_TimerMatch
-      0003E4 20 F8            [ 2]  818 	jra	00102$
+      0003E2 CDr02r9D         [ 4]  817 	call	_TimerMatch
+      0003E5 20 F8            [ 2]  818 	jra	00102$
                                     819 ;	main.c: 302: }
-      0003E6 81               [ 4]  820 	ret
+      0003E7 81               [ 4]  820 	ret
                                     821 	.area CODE
                                     822 	.area CONST
                                     823 	.area INITIALIZER

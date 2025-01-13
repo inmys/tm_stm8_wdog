@@ -236,7 +236,7 @@
       0080FE 26 0F            [ 1]  236 	jrne	00105$
       008100 4C               [ 1]  237 	inc	a
       008101 AE 50 0F         [ 2]  238 	ldw	x, #0x500f
-      008104 CD 85 4A         [ 4]  239 	call	_GPIO_ToggleBits
+      008104 CD 85 4B         [ 4]  239 	call	_GPIO_ToggleBits
                                     240 ;	main.c: 64: SetTimer(1, TIMER_1_SEC);
       008107 AE 00 64         [ 2]  241 	ldw	x, #0x0064
       00810A A6 01            [ 1]  242 	ld	a, #0x01
@@ -249,7 +249,7 @@
                                     249 ;	main.c: 67: GPIO_SetBits(SMARC_BOOTMODE);
       008115 A6 20            [ 1]  250 	ld	a, #0x20
       008117 AE 50 0A         [ 2]  251 	ldw	x, #0x500a
-      00811A CD 85 35         [ 4]  252 	call	_GPIO_SetBits
+      00811A CD 85 36         [ 4]  252 	call	_GPIO_SetBits
                                     253 ;	main.c: 68: SysCntrl.bootmode = 1;
       00811D 35 01 00 14      [ 1]  254 	mov	_SysCntrl+18, #0x01
                                     255 ;	main.c: 70: SetTimer(2, TIMER_1_SEC);
@@ -273,15 +273,15 @@
                                     273 ;	main.c: 76: GPIO_SetBits(LED_PWR);
       00813B A6 01            [ 1]  274 	ld	a, #0x01
       00813D AE 50 0F         [ 2]  275 	ldw	x, #0x500f
-      008140 CD 85 35         [ 4]  276 	call	_GPIO_SetBits
+      008140 CD 85 36         [ 4]  276 	call	_GPIO_SetBits
                                     277 ;	main.c: 77: GPIO_SetBits(ENABLE_5V); // delay between ENABLE_5V and POWER_CPU should be < 200ms
       008143 A6 04            [ 1]  278 	ld	a, #0x04
       008145 AE 50 05         [ 2]  279 	ldw	x, #0x5005
-      008148 CD 85 35         [ 4]  280 	call	_GPIO_SetBits
+      008148 CD 85 36         [ 4]  280 	call	_GPIO_SetBits
                                     281 ;	main.c: 78: GPIO_SetBits(RESET_CPU);
       00814B A6 80            [ 1]  282 	ld	a, #0x80
       00814D AE 50 05         [ 2]  283 	ldw	x, #0x5005
-      008150 CD 85 35         [ 4]  284 	call	_GPIO_SetBits
+      008150 CD 85 36         [ 4]  284 	call	_GPIO_SetBits
                                     285 ;	main.c: 80: SetTimer(0, TIMER_500_MS);
       008153 AE 00 32         [ 2]  286 	ldw	x, #0x0032
       008156 4F               [ 1]  287 	clr	a
@@ -304,11 +304,11 @@
                                     304 ;	main.c: 89: GPIO_ResetBits(LED_GOOD);
       008170 A6 08            [ 1]  305 	ld	a, #0x08
       008172 AE 50 00         [ 2]  306 	ldw	x, #0x5000
-      008175 CD 85 3E         [ 4]  307 	call	_GPIO_ResetBits
+      008175 CD 85 3F         [ 4]  307 	call	_GPIO_ResetBits
                                     308 ;	main.c: 90: GPIO_SetBits(PG_SMARC);
       008178 A6 08            [ 1]  309 	ld	a, #0x08
       00817A AE 50 05         [ 2]  310 	ldw	x, #0x5005
-      00817D CD 85 35         [ 4]  311 	call	_GPIO_SetBits
+      00817D CD 85 36         [ 4]  311 	call	_GPIO_SetBits
                                     312 ;	main.c: 91: SetTimer(2, TIMER_50_MS);
       008180 AE 00 05         [ 2]  313 	ldw	x, #0x0005
       008183 A6 02            [ 1]  314 	ld	a, #0x02
@@ -327,7 +327,7 @@
                                     327 ;	main.c: 99: GPIO_SetBits(ENABLE_DCDC);
       008196 A6 02            [ 1]  328 	ld	a, #0x02
       008198 AE 50 05         [ 2]  329 	ldw	x, #0x5005
-      00819B CD 85 35         [ 4]  330 	call	_GPIO_SetBits
+      00819B CD 85 36         [ 4]  330 	call	_GPIO_SetBits
                                     331 ;	main.c: 100: SetTimer(2, TIMER_50_MS);
       00819E AE 00 05         [ 2]  332 	ldw	x, #0x0005
       0081A1 A6 02            [ 1]  333 	ld	a, #0x02
@@ -346,11 +346,11 @@
                                     346 ;	main.c: 106: GPIO_SetBits(POWER_CPU); // delay between ENABLE_5V and POWER_CPU should be < 200ms
       0081B4 A6 40            [ 1]  347 	ld	a, #0x40
       0081B6 AE 50 05         [ 2]  348 	ldw	x, #0x5005
-      0081B9 CD 85 35         [ 4]  349 	call	_GPIO_SetBits
+      0081B9 CD 85 36         [ 4]  349 	call	_GPIO_SetBits
                                     350 ;	main.c: 107: GPIO_SetBits(LED_PWR);
       0081BC A6 01            [ 1]  351 	ld	a, #0x01
       0081BE AE 50 0F         [ 2]  352 	ldw	x, #0x500f
-      0081C1 CD 85 35         [ 4]  353 	call	_GPIO_SetBits
+      0081C1 CD 85 36         [ 4]  353 	call	_GPIO_SetBits
                                     354 ;	main.c: 108: SetTimer(2, TIMER_50_MS); 
       0081C4 AE 00 05         [ 2]  355 	ldw	x, #0x0005
       0081C7 A6 02            [ 1]  356 	ld	a, #0x02
@@ -369,11 +369,11 @@
                                     369 ;	main.c: 114: GPIO_ResetBits(RESET_CPU);
       0081DA A6 80            [ 1]  370 	ld	a, #0x80
       0081DC AE 50 05         [ 2]  371 	ldw	x, #0x5005
-      0081DF CD 85 3E         [ 4]  372 	call	_GPIO_ResetBits
+      0081DF CD 85 3F         [ 4]  372 	call	_GPIO_ResetBits
                                     373 ;	main.c: 115: GPIO_SetBits(LED_PWR);
       0081E2 A6 01            [ 1]  374 	ld	a, #0x01
       0081E4 AE 50 0F         [ 2]  375 	ldw	x, #0x500f
-      0081E7 CD 85 35         [ 4]  376 	call	_GPIO_SetBits
+      0081E7 CD 85 36         [ 4]  376 	call	_GPIO_SetBits
                                     377 ;	main.c: 116: SetTimer(2, TIMER_50_MS);
       0081EA AE 00 05         [ 2]  378 	ldw	x, #0x0005
       0081ED A6 02            [ 1]  379 	ld	a, #0x02
@@ -394,7 +394,7 @@
                                     394 ;	main.c: 123: GPIO_ResetBits(SMARC_BOOTMODE);
       008203 A6 20            [ 1]  395 	ld	a, #0x20
       008205 AE 50 0A         [ 2]  396 	ldw	x, #0x500a
-      008208 CD 85 3E         [ 4]  397 	call	_GPIO_ResetBits
+      008208 CD 85 3F         [ 4]  397 	call	_GPIO_ResetBits
                                     398 ;	main.c: 124: SysCntrl.bootmode = 0;
       00820B 35 00 00 14      [ 1]  399 	mov	_SysCntrl+18, #0x00
       00820F                        400 00126$:
@@ -412,7 +412,7 @@
                                     412 ;	main.c: 135: GPIO_ToggleBits(LED_GOOD);
       00821E A6 08            [ 1]  413 	ld	a, #0x08
       008220 AE 50 00         [ 2]  414 	ldw	x, #0x5000
-      008223 CD 85 4A         [ 4]  415 	call	_GPIO_ToggleBits
+      008223 CD 85 4B         [ 4]  415 	call	_GPIO_ToggleBits
                                     416 ;	main.c: 136: SetTimer(0, TIMER_1_SEC);
       008226 AE 00 64         [ 2]  417 	ldw	x, #0x0064
       008229 4F               [ 1]  418 	clr	a
@@ -425,27 +425,27 @@
                                     425 ;	main.c: 140: GPIO_ResetBits(POWER_CPU);
       008233 A6 40            [ 1]  426 	ld	a, #0x40
       008235 AE 50 05         [ 2]  427 	ldw	x, #0x5005
-      008238 CD 85 3E         [ 4]  428 	call	_GPIO_ResetBits
+      008238 CD 85 3F         [ 4]  428 	call	_GPIO_ResetBits
                                     429 ;	main.c: 141: GPIO_ResetBits(ENABLE_DCDC);
       00823B A6 02            [ 1]  430 	ld	a, #0x02
       00823D AE 50 05         [ 2]  431 	ldw	x, #0x5005
-      008240 CD 85 3E         [ 4]  432 	call	_GPIO_ResetBits
+      008240 CD 85 3F         [ 4]  432 	call	_GPIO_ResetBits
                                     433 ;	main.c: 142: GPIO_ResetBits(ENABLE_5V);
       008243 A6 04            [ 1]  434 	ld	a, #0x04
       008245 AE 50 05         [ 2]  435 	ldw	x, #0x5005
-      008248 CD 85 3E         [ 4]  436 	call	_GPIO_ResetBits
+      008248 CD 85 3F         [ 4]  436 	call	_GPIO_ResetBits
                                     437 ;	main.c: 143: GPIO_ResetBits(PG_SMARC);
       00824B A6 08            [ 1]  438 	ld	a, #0x08
       00824D AE 50 05         [ 2]  439 	ldw	x, #0x5005
-      008250 CD 85 3E         [ 4]  440 	call	_GPIO_ResetBits
+      008250 CD 85 3F         [ 4]  440 	call	_GPIO_ResetBits
                                     441 ;	main.c: 144: GPIO_ResetBits(SMARC_BOOTMODE);
       008253 A6 20            [ 1]  442 	ld	a, #0x20
       008255 AE 50 0A         [ 2]  443 	ldw	x, #0x500a
-      008258 CD 85 3E         [ 4]  444 	call	_GPIO_ResetBits
+      008258 CD 85 3F         [ 4]  444 	call	_GPIO_ResetBits
                                     445 ;	main.c: 145: GPIO_SetBits(LED_GOOD);
       00825B A6 08            [ 1]  446 	ld	a, #0x08
       00825D AE 50 00         [ 2]  447 	ldw	x, #0x5000
-      008260 CD 85 35         [ 4]  448 	call	_GPIO_SetBits
+      008260 CD 85 36         [ 4]  448 	call	_GPIO_SetBits
                                     449 ;	main.c: 146: SysCntrl.state = WAIT_PWR_BTN;
       008263 35 00 00 0A      [ 1]  450 	mov	_SysCntrl+8, #0x00
                                     451 ;	main.c: 147: tick(start);
@@ -461,7 +461,7 @@
                                     461 ;	main.c: 152: GPIO_ToggleBits(LED_PWR);
       008271 A6 01            [ 1]  462 	ld	a, #0x01
       008273 AE 50 0F         [ 2]  463 	ldw	x, #0x500f
-      008276 CD 85 4A         [ 4]  464 	call	_GPIO_ToggleBits
+      008276 CD 85 4B         [ 4]  464 	call	_GPIO_ToggleBits
                                     465 ;	main.c: 153: SetTimer(0, TIMER_100_MS);
       008279 AE 00 0A         [ 2]  466 	ldw	x, #0x000a
       00827C 4F               [ 1]  467 	clr	a
@@ -524,7 +524,7 @@
                                     524 ;	main.c: 179: SysCntrl.btn_state = GPIO_ReadInputDataBit(PWR_BTN);
       0082B6 A6 04            [ 1]  525 	ld	a, #0x04
       0082B8 AE 50 00         [ 2]  526 	ldw	x, #0x5000
-      0082BB CD 85 56         [ 4]  527 	call	_GPIO_ReadInputDataBit
+      0082BB CD 85 57         [ 4]  527 	call	_GPIO_ReadInputDataBit
       0082BE 6B 02            [ 1]  528 	ld	(0x02, sp), a
       0082C0 AE 00 0C         [ 2]  529 	ldw	x, #(_SysCntrl+10)
       0082C3 7B 02            [ 1]  530 	ld	a, (0x02, sp)
@@ -576,7 +576,7 @@
                                     576 ;	main.c: 196: if( GPIO_ReadInputDataBit(PG_5V) ){
       00830D A6 10            [ 1]  577 	ld	a, #0x10
       00830F AE 50 05         [ 2]  578 	ldw	x, #0x5005
-      008312 CD 85 56         [ 4]  579 	call	_GPIO_ReadInputDataBit
+      008312 CD 85 57         [ 4]  579 	call	_GPIO_ReadInputDataBit
       008315 4D               [ 1]  580 	tnz	a
       008316 27 05            [ 1]  581 	jreq	00108$
                                     582 ;	main.c: 197: tick(pgood_5v);
@@ -586,7 +586,7 @@
                                     586 ;	main.c: 200: if( GPIO_ReadInputDataBit(CARRIER_PWR_ON) ){
       00831D A6 20            [ 1]  587 	ld	a, #0x20
       00831F AE 50 05         [ 2]  588 	ldw	x, #0x5005
-      008322 CD 85 56         [ 4]  589 	call	_GPIO_ReadInputDataBit
+      008322 CD 85 57         [ 4]  589 	call	_GPIO_ReadInputDataBit
       008325 4D               [ 1]  590 	tnz	a
       008326 27 07            [ 1]  591 	jreq	00111$
                                     592 ;	main.c: 201: tick(carrier);
@@ -671,7 +671,7 @@
       00837D 35 01 00 01      [ 1]  671 	mov	_bMainTimer+0, #0x01
                                     672 ;	main.c: 244: TIM4_ClearITPendingBit(TIM4_IT_Update);
       008381 A6 01            [ 1]  673 	ld	a, #0x01
-      008383 CD 89 B6         [ 4]  674 	call	_TIM4_ClearITPendingBit
+      008383 CD 89 B7         [ 4]  674 	call	_TIM4_ClearITPendingBit
                                     675 ;	main.c: 245: }
       008386 80               [11]  676 	iret
                                     677 ;	main.c: 247: int main( void )
@@ -683,113 +683,113 @@
       008387 9B               [ 1]  683 	sim;	
                                     684 ;	main.c: 251: GPIO_DeInit(GPIOA);
       008388 AE 50 00         [ 2]  685 	ldw	x, #0x5000
-      00838B CD 84 7C         [ 4]  686 	call	_GPIO_DeInit
+      00838B CD 84 7D         [ 4]  686 	call	_GPIO_DeInit
                                     687 ;	main.c: 252: GPIO_DeInit(GPIOB);
       00838E AE 50 05         [ 2]  688 	ldw	x, #0x5005
-      008391 CD 84 7C         [ 4]  689 	call	_GPIO_DeInit
+      008391 CD 84 7D         [ 4]  689 	call	_GPIO_DeInit
                                     690 ;	main.c: 253: GPIO_DeInit(GPIOC);
       008394 AE 50 0A         [ 2]  691 	ldw	x, #0x500a
-      008397 CD 84 7C         [ 4]  692 	call	_GPIO_DeInit
+      008397 CD 84 7D         [ 4]  692 	call	_GPIO_DeInit
                                     693 ;	main.c: 254: GPIO_DeInit(GPIOD);
       00839A AE 50 0F         [ 2]  694 	ldw	x, #0x500f
-      00839D CD 84 7C         [ 4]  695 	call	_GPIO_DeInit
+      00839D CD 84 7D         [ 4]  695 	call	_GPIO_DeInit
                                     696 ;	main.c: 256: GPIO_Init(LED_GOOD, GPIO_Mode_Out_PP_High_Fast);
       0083A0 4B F0            [ 1]  697 	push	#0xf0
       0083A2 A6 08            [ 1]  698 	ld	a, #0x08
       0083A4 AE 50 00         [ 2]  699 	ldw	x, #0x5000
-      0083A7 CD 84 8A         [ 4]  700 	call	_GPIO_Init
+      0083A7 CD 84 8B         [ 4]  700 	call	_GPIO_Init
                                     701 ;	main.c: 257: GPIO_Init(LED_PWR, GPIO_Mode_Out_PP_Low_Fast);
       0083AA 4B E0            [ 1]  702 	push	#0xe0
       0083AC A6 01            [ 1]  703 	ld	a, #0x01
       0083AE AE 50 0F         [ 2]  704 	ldw	x, #0x500f
-      0083B1 CD 84 8A         [ 4]  705 	call	_GPIO_Init
+      0083B1 CD 84 8B         [ 4]  705 	call	_GPIO_Init
                                     706 ;	main.c: 258: GPIO_Init(ENABLE_DCDC, GPIO_Mode_Out_PP_Low_Fast);
       0083B4 4B E0            [ 1]  707 	push	#0xe0
       0083B6 A6 02            [ 1]  708 	ld	a, #0x02
       0083B8 AE 50 05         [ 2]  709 	ldw	x, #0x5005
-      0083BB CD 84 8A         [ 4]  710 	call	_GPIO_Init
+      0083BB CD 84 8B         [ 4]  710 	call	_GPIO_Init
                                     711 ;	main.c: 259: GPIO_Init(ENABLE_5V, GPIO_Mode_Out_PP_Low_Fast);
       0083BE 4B E0            [ 1]  712 	push	#0xe0
       0083C0 A6 04            [ 1]  713 	ld	a, #0x04
       0083C2 AE 50 05         [ 2]  714 	ldw	x, #0x5005
-      0083C5 CD 84 8A         [ 4]  715 	call	_GPIO_Init
+      0083C5 CD 84 8B         [ 4]  715 	call	_GPIO_Init
                                     716 ;	main.c: 260: GPIO_Init(PG_SMARC, GPIO_Mode_Out_PP_Low_Fast);
       0083C8 4B E0            [ 1]  717 	push	#0xe0
       0083CA A6 08            [ 1]  718 	ld	a, #0x08
       0083CC AE 50 05         [ 2]  719 	ldw	x, #0x5005
-      0083CF CD 84 8A         [ 4]  720 	call	_GPIO_Init
+      0083CF CD 84 8B         [ 4]  720 	call	_GPIO_Init
                                     721 ;	main.c: 261: GPIO_Init(POWER_CPU, GPIO_Mode_Out_PP_Low_Fast);
       0083D2 4B E0            [ 1]  722 	push	#0xe0
       0083D4 A6 40            [ 1]  723 	ld	a, #0x40
       0083D6 AE 50 05         [ 2]  724 	ldw	x, #0x5005
-      0083D9 CD 84 8A         [ 4]  725 	call	_GPIO_Init
+      0083D9 CD 84 8B         [ 4]  725 	call	_GPIO_Init
                                     726 ;	main.c: 262: GPIO_Init(RESET_CPU, GPIO_Mode_Out_PP_Low_Fast);
       0083DC 4B E0            [ 1]  727 	push	#0xe0
       0083DE A6 80            [ 1]  728 	ld	a, #0x80
       0083E0 AE 50 05         [ 2]  729 	ldw	x, #0x5005
-      0083E3 CD 84 8A         [ 4]  730 	call	_GPIO_Init
+      0083E3 CD 84 8B         [ 4]  730 	call	_GPIO_Init
                                     731 ;	main.c: 263: GPIO_Init(WDOG_OUT, GPIO_Mode_Out_PP_Low_Fast);
       0083E6 4B E0            [ 1]  732 	push	#0xe0
       0083E8 A6 10            [ 1]  733 	ld	a, #0x10
       0083EA AE 50 0A         [ 2]  734 	ldw	x, #0x500a
-      0083ED CD 84 8A         [ 4]  735 	call	_GPIO_Init
+      0083ED CD 84 8B         [ 4]  735 	call	_GPIO_Init
                                     736 ;	main.c: 265: GPIO_Init(PWR_BTN, GPIO_Mode_In_PU_No_IT);
       0083F0 4B 40            [ 1]  737 	push	#0x40
       0083F2 A6 04            [ 1]  738 	ld	a, #0x04
       0083F4 AE 50 00         [ 2]  739 	ldw	x, #0x5000
-      0083F7 CD 84 8A         [ 4]  740 	call	_GPIO_Init
+      0083F7 CD 84 8B         [ 4]  740 	call	_GPIO_Init
                                     741 ;	main.c: 266: GPIO_Init(PG_5V, GPIO_Mode_In_PU_No_IT);
       0083FA 4B 40            [ 1]  742 	push	#0x40
       0083FC A6 10            [ 1]  743 	ld	a, #0x10
       0083FE AE 50 05         [ 2]  744 	ldw	x, #0x5005
-      008401 CD 84 8A         [ 4]  745 	call	_GPIO_Init
+      008401 CD 84 8B         [ 4]  745 	call	_GPIO_Init
                                     746 ;	main.c: 267: GPIO_Init(CARRIER_PWR_ON, GPIO_Mode_In_PU_No_IT);
       008404 4B 40            [ 1]  747 	push	#0x40
       008406 A6 20            [ 1]  748 	ld	a, #0x20
       008408 AE 50 05         [ 2]  749 	ldw	x, #0x5005
-      00840B CD 84 8A         [ 4]  750 	call	_GPIO_Init
+      00840B CD 84 8B         [ 4]  750 	call	_GPIO_Init
                                     751 ;	main.c: 268: GPIO_Init(WDOG_IN, GPIO_Mode_In_PU_No_IT);
       00840E 4B 40            [ 1]  752 	push	#0x40
       008410 A6 01            [ 1]  753 	ld	a, #0x01
       008412 AE 50 05         [ 2]  754 	ldw	x, #0x5005
-      008415 CD 84 8A         [ 4]  755 	call	_GPIO_Init
+      008415 CD 84 8B         [ 4]  755 	call	_GPIO_Init
                                     756 ;	main.c: 269: GPIO_Init(SMARC_BOOTMODE, GPIO_Mode_Out_PP_Low_Fast);
       008418 4B E0            [ 1]  757 	push	#0xe0
       00841A A6 20            [ 1]  758 	ld	a, #0x20
       00841C AE 50 0A         [ 2]  759 	ldw	x, #0x500a
-      00841F CD 84 8A         [ 4]  760 	call	_GPIO_Init
+      00841F CD 84 8B         [ 4]  760 	call	_GPIO_Init
                                     761 ;	main.c: 274: CLK_DeInit();
-      008422 CD 85 69         [ 4]  762 	call	_CLK_DeInit
+      008422 CD 85 6A         [ 4]  762 	call	_CLK_DeInit
                                     763 ;	main.c: 275: CLK_SYSCLKDivConfig(CLK_SYSCLKDiv_1);
       008425 4F               [ 1]  764 	clr	a
-      008426 CD 86 90         [ 4]  765 	call	_CLK_SYSCLKDivConfig
+      008426 CD 86 91         [ 4]  765 	call	_CLK_SYSCLKDivConfig
                                     766 ;	main.c: 276: CLK_PeripheralClockConfig(CLK_Peripheral_TIM4, ENABLE);
       008429 4B 01            [ 1]  767 	push	#0x01
       00842B A6 02            [ 1]  768 	ld	a, #0x02
-      00842D CD 86 B8         [ 4]  769 	call	_CLK_PeripheralClockConfig
+      00842D CD 86 B9         [ 4]  769 	call	_CLK_PeripheralClockConfig
                                     770 ;	main.c: 277: CLK_PeripheralClockConfig(CLK_Peripheral_USART1, ENABLE);
       008430 4B 01            [ 1]  771 	push	#0x01
       008432 A6 05            [ 1]  772 	ld	a, #0x05
-      008434 CD 86 B8         [ 4]  773 	call	_CLK_PeripheralClockConfig
+      008434 CD 86 B9         [ 4]  773 	call	_CLK_PeripheralClockConfig
                                     774 ;	main.c: 279: TIM4_DeInit();
-      008437 CD 88 84         [ 4]  775 	call	_TIM4_DeInit
+      008437 CD 88 85         [ 4]  775 	call	_TIM4_DeInit
                                     776 ;	main.c: 281: TIM4_Cmd(DISABLE); 
       00843A 4F               [ 1]  777 	clr	a
-      00843B CD 89 3F         [ 4]  778 	call	_TIM4_Cmd
+      00843B CD 89 40         [ 4]  778 	call	_TIM4_Cmd
                                     779 ;	main.c: 282: TIM4_TimeBaseInit(TIM4_Prescaler_1024, 156);
       00843E 4B 9C            [ 1]  780 	push	#0x9c
       008440 A6 0A            [ 1]  781 	ld	a, #0x0a
-      008442 CD 88 A5         [ 4]  782 	call	_TIM4_TimeBaseInit
+      008442 CD 88 A6         [ 4]  782 	call	_TIM4_TimeBaseInit
                                     783 ;	main.c: 283: TIM4_ClearFlag(TIM4_FLAG_Update);
       008445 A6 01            [ 1]  784 	ld	a, #0x01
-      008447 CD 89 93         [ 4]  785 	call	_TIM4_ClearFlag
+      008447 CD 89 94         [ 4]  785 	call	_TIM4_ClearFlag
                                     786 ;	main.c: 284: TIM4_ITConfig(TIM4_IT_Update, ENABLE);
       00844A 4B 01            [ 1]  787 	push	#0x01
       00844C A6 01            [ 1]  788 	ld	a, #0x01
-      00844E CD 89 57         [ 4]  789 	call	_TIM4_ITConfig
+      00844E CD 89 58         [ 4]  789 	call	_TIM4_ITConfig
                                     790 ;	main.c: 285: TIM4_Cmd(ENABLE);       // let's go
       008451 A6 01            [ 1]  791 	ld	a, #0x01
-      008453 CD 89 3F         [ 4]  792 	call	_TIM4_Cmd
+      008453 CD 89 40         [ 4]  792 	call	_TIM4_Cmd
                                     793 ;	main.c: 286: enableInterrupts();
       008456 9A               [ 1]  794 	rim;	
                                     795 ;	main.c: 289: bMainTimer = 0;
@@ -806,18 +806,18 @@
       008469 AE 00 0D         [ 2]  806 	ldw	x, #(_SysCntrl+11)
       00846C 6F 01            [ 1]  807 	clr	(0x1, x)
       00846E 7F               [ 1]  808 	clr	(x)
-                                    809 ;	main.c: 295: tick(start);
-      00846F 4F               [ 1]  810 	clr	a
-      008470 CD 80 AE         [ 4]  811 	call	_tick
+                                    809 ;	main.c: 295: tick(pwrbtn_on);
+      00846F A6 04            [ 1]  810 	ld	a, #0x04
+      008471 CD 80 AE         [ 4]  811 	call	_tick
                                     812 ;	main.c: 296: while (1) {
-      008473                        813 00102$:
+      008474                        813 00102$:
                                     814 ;	main.c: 297: ReadInputGpio();
-      008473 CD 82 B4         [ 4]  815 	call	_ReadInputGpio
+      008474 CD 82 B4         [ 4]  815 	call	_ReadInputGpio
                                     816 ;	main.c: 298: TimerMatch();
-      008476 CD 83 32         [ 4]  817 	call	_TimerMatch
-      008479 20 F8            [ 2]  818 	jra	00102$
+      008477 CD 83 32         [ 4]  817 	call	_TimerMatch
+      00847A 20 F8            [ 2]  818 	jra	00102$
                                     819 ;	main.c: 302: }
-      00847B 81               [ 4]  820 	ret
+      00847C 81               [ 4]  820 	ret
                                     821 	.area CODE
                                     822 	.area CONST
                                     823 	.area INITIALIZER

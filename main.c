@@ -292,7 +292,7 @@ int main( void )
 	SysCntrl.btn_change_time = 0;
 	SysCntrl.btn_last_change = 0;
 
-	tick(start);
+	tick(pwrbtn_on);
 	while (1) {
 		ReadInputGpio();
 		TimerMatch();
